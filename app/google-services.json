@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1042789098572",
+    "firebase_url": "https://test-base-soc-net.firebaseio.com",
+    "project_id": "test-base-soc-net",
+    "storage_bucket": "test-base-soc-net.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1042789098572:android:2d0b5a4c4c89d445",
+        "android_client_info": {
+          "package_name": "ru.akov.buddyinshot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1042789098572-uvdmjjedcbbsnq2d587de89o0rs0vl0s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.akov.buddyinshot",
+            "certificate_hash": "F32AB3EE77E039CC65D249FB31F53D6A9C74DEC4"
+          }
+        },
+        {
+          "client_id": "1042789098572-8ic6sd3tu2urdm5s8ak3rieridimqvli.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbw4nekHiEQ2xCsQkLJ8DiVymiOlpKJZI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1042789098572-8ic6sd3tu2urdm5s8ak3rieridimqvli.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
