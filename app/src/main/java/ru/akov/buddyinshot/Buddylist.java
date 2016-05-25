@@ -21,9 +21,11 @@ public class Buddylist extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     next_scr(getCurrentFocus());
+
                 }
             });
         }
+        //тест для гита
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
