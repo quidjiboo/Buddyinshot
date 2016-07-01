@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
+//dfgdfgfd
     }
     public void  curent_user_action(View view) {
         auth   = FirebaseAuth.getInstance();
