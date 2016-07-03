@@ -4,23 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.ui.email.SignInActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     private static final String UNCHANGED_CONFIG_VALUE = "CHANGE-ME";
@@ -66,9 +61,17 @@ public class MainActivity extends AppCompatActivity {
 //dfgdfgfderwer
     }
     public void  curent_user_action(View view) {
-        auth   = FirebaseAuth.getInstance();
-        Snackbar.make(findViewById(android.R.id.content),auth.getCurrentUser().toString(), Snackbar.LENGTH_LONG).show();
+        if (auth.getCurrentUser() != null) {
+            auth = FirebaseAuth.getInstance();
+            Snackbar.make(findViewById(android.R.id.content), auth.getCurrentUser().toString(), Snackbar.LENGTH_LONG).show();
+        } else {
+
+            showSnackbar("НЕ ПОКДЛЮЧЕН!");
+            // not signed in
+        }
     }
+
+
     public void login_action(View view) {
         if(auth.getCurrentUser() == null){
             startActivityForResult(
@@ -80,6 +83,38 @@ public class MainActivity extends AppCompatActivity {
                     100);}
 
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100) {
+            handleSignInResponse(resultCode, data);
+            return;
+        }
+
+       showSnackbar("Unexpected onActivityResult response code");
+    }
+
+    @MainThread
+    private void handleSignInResponse(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+      //      startActivity(SignedInActivity.createIntent(this));
+
+
+            Intent intent = new Intent(MainActivity.this, Buddylist.class);
+
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        if (resultCode == RESULT_CANCELED) {
+            showSnackbar("Sign in cancelle");
+            return;
+        }
+
+        showSnackbar("Unknown response from AuthUI sign-in");
+    }
+
     public void logout_action(View view) {
         AuthUI.getInstance()
                 .signOut(this)
@@ -119,12 +154,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     public void next_scr(View view) {
-        this.finish();
+
         Intent intent = new Intent(MainActivity.this, Buddylist.class);
 
         startActivity(intent);
 
-
+        this.finish();
     }
 
     @MainThread
