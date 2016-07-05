@@ -1,7 +1,6 @@
 package ru.akov.buddyinshot;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.design.widget.FloatingActionButton;
@@ -14,17 +13,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 public class Buddylist extends AppCompatActivity {
     @BindView(R.id.user_profile_picture)
     ImageView mUserProfilePicture;
@@ -75,6 +69,9 @@ public class Buddylist extends AppCompatActivity {
     @MainThread
     private void populateProfile() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+
 // при разлогиненом не заполняются поля...!!
 
         if (user.getPhotoUrl() != null) {
@@ -88,15 +85,28 @@ public class Buddylist extends AppCompatActivity {
         //            TextUtils.isEmpty(user.getEmail()) ? "No email" : user.getEmail());
        //     mUserEmail.setText("NENENNENENEN");
         }
+        else{Log.v("AKOV","NO URL FOR FOTO");}
 
-
+        /*FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+        if (user1 != null) {
+            // Name, email address, and profile photo Url
+            String name = user1.getDisplayName();
+            String email = user1.getEmail();
+            Uri photoUrl = user1.getPhotoUrl();
+            if(photoUrl!=null)
+            Log.v("AKOV",photoUrl.toString());
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getToken() instead.
+            String uid = user.getUid();
+        }*/
 
 
         mUserEmail.setText(
                           TextUtils.isEmpty(user.getEmail()) ? "No email" : user.getEmail());
         mUserDisplayName.setText(
                 TextUtils.isEmpty(user.getDisplayName()) ? "No display name" : user.getDisplayName());
-        Log.v("AKOV","NO URL FOR FOTO");
+
 
 
 

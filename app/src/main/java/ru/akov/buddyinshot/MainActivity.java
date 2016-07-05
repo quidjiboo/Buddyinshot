@@ -1,7 +1,6 @@
 package ru.akov.buddyinshot;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
@@ -9,15 +8,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -114,8 +109,11 @@ public class MainActivity extends AppCompatActivity {
       //      startActivity(SignedInActivity.createIntent(this));
 
 
-            Intent intent = new Intent(MainActivity.this, Buddylist.class);
 
+
+
+
+            Intent intent = new Intent(MainActivity.this, Buddylist.class);
             startActivity(intent);
             finish();
             return;
