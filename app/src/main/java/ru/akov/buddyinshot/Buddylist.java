@@ -70,7 +70,7 @@ public class Buddylist extends AppCompatActivity {
     private void populateProfile() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-
+if(user!=null){
 
 // при разлогиненом не заполняются поля...!!
 
@@ -110,5 +110,5 @@ public class Buddylist extends AppCompatActivity {
 
 
 
-    }
+    }}
 }
