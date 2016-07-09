@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,17 +17,39 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     private static final String UNCHANGED_CONFIG_VALUE = "CHANGE-ME";
 
     private FirebaseAuth auth;
+    FirebaseAuth.AuthStateListener mAuthListener;
+   
+    Chek_status_online dsf;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mAuthListener  = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    Log.v("AKOV", "!!!!!!!Подключены!!!!!!!!!!" + user.getUid());
+                    // User is signed in
+
+                } else {
+                    // User is signed out
+                    Log.v("AKOV", "НЕ ПОДКЛЮЧЕНЫ");
+                }
+                // ...
+            }
+        };
+
 
         auth   = FirebaseAuth.getInstance();
+
+      /*
 
         if (auth.getCurrentUser() != null) {
             showSnackbar(auth.getCurrentUser().toString());
@@ -35,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
             showSnackbar("НЕ ПОКДЛЮЧЕН!");
             // not signed in
-        }
+        }*/
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -63,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
 
 //dfgdfgfderwer
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(mAuthListener);
+    }
+
     public void  curent_user_action(View view) {
         if (auth.getCurrentUser() != null) {
             auth = FirebaseAuth.getInstance();
