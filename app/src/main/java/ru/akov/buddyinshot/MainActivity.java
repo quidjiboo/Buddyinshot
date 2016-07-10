@@ -13,22 +13,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     private static final String UNCHANGED_CONFIG_VALUE = "CHANGE-ME";
 
-    private FirebaseAuth auth;
-    FirebaseAuth.AuthStateListener mAuthListener;
+   private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
    
-    Chek_status_online dsf;
+    Status_auth_changes dsf;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        auth   = FirebaseAuth.getInstance();
 
         mAuthListener  = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -36,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.v("AKOV", "!!!!!!!Подключены!!!!!!!!!!" + user.getUid());
+                    next_scr(getCurrentFocus());
                     // User is signed in
 
                 } else {
@@ -47,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-        auth   = FirebaseAuth.getInstance();
+
 
       /*
 
@@ -106,17 +105,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void login_action(View view) {
-        
-        if(auth.getCurrentUser() == null){
-            startActivityForResult(
-                    AuthUI.getInstance().createSignInIntentBuilder()
-                            .setTheme(AuthUI.getDefaultTheme())
-                            .setProviders(AuthUI.GOOGLE_PROVIDER)
-                            .setTosUrl("https://www.google.com/policies/terms/")
-                            .build(),
-                    100);}
+        Status_auth_changes.login_action(auth,this);
+       }
 
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -137,12 +128,6 @@ public class MainActivity extends AppCompatActivity {
     private void handleSignInResponse(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
       //      startActivity(SignedInActivity.createIntent(this));
-
-
-
-
-
-
             Intent intent = new Intent(MainActivity.this, Buddylist.class);
             startActivity(intent);
             finish();
@@ -158,20 +143,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void logout_action(View view) {
+        Status_auth_changes.logout_action(this,view);
 
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Snackbar.make(findViewById(android.R.id.content),"разлогинились", Snackbar.LENGTH_LONG).show();
-
-                        } else {
-
-                        }
-                    }
-                });
 
     }
 
@@ -197,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     public void next_scr(View view) {
-
+        auth.removeAuthStateListener(mAuthListener);
         Intent intent = new Intent(MainActivity.this, Buddylist.class);
 
         startActivity(intent);
