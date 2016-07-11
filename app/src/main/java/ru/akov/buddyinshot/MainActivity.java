@@ -15,49 +15,24 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     private static final String UNCHANGED_CONFIG_VALUE = "CHANGE-ME";
-
-   private FirebaseAuth auth;
+    private My_app app;
+    private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-   
-    Status_auth_changes dsf;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        auth   = FirebaseAuth.getInstance();
-
-        mAuthListener  = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    Log.v("AKOV", "!!!!!!!Подключены!!!!!!!!!!" + user.getUid());
-                    next_scr(getCurrentFocus());
-                    // User is signed in
-
-                } else {
-                    // User is signed out
-                    Log.v("AKOV", "НЕ ПОДКЛЮЧЕНЫ");
-                }
-                // ...
-            }
-        };
 
 
 
 
-      /*
 
-        if (auth.getCurrentUser() != null) {
-            showSnackbar(auth.getCurrentUser().toString());
-            // already signed in
-        } else {
 
-            showSnackbar("НЕ ПОКДЛЮЧЕН!");
-            // not signed in
-        }*/
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -82,14 +57,17 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        app = ((My_app) getApplicationContext());
 
-//dfgdfgfderwer
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        auth.addAuthStateListener(mAuthListener);
+        this.auth=app.getauth();
+        this. mAuthListener=app.getmAuthListener();
+
+
     }
 
     public void  curent_user_action(View view) {
@@ -105,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void login_action(View view) {
-        Status_auth_changes.login_action(auth,this);
+
+        Status_auth_changes_singltonne.getInstance().login_action(auth,this);
        }
 
     @Override
@@ -127,10 +106,9 @@ public class MainActivity extends AppCompatActivity {
     @MainThread
     private void handleSignInResponse(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-      //      startActivity(SignedInActivity.createIntent(this));
-            Intent intent = new Intent(MainActivity.this, Buddylist.class);
-            startActivity(intent);
-            finish();
+
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+            Status_auth_changes_singltonne.getInstance().Chek_status_online_user_siglevalue_listner(mDatabase,auth.getCurrentUser());
             return;
         }
 
@@ -143,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void logout_action(View view) {
-        Status_auth_changes.logout_action(this,view);
+        Status_auth_changes_singltonne.getInstance().logout_action(this,view);
 
 
     }
@@ -170,13 +148,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     public void next_scr(View view) {
-        auth.removeAuthStateListener(mAuthListener);
+     //   Database_listners.getInstance().Authlisters_removers(mAuthListener,auth);
+      //  auth.removeAuthStateListener(mAuthListener);
         Intent intent = new Intent(MainActivity.this, Buddylist.class);
 
         startActivity(intent);
 
         this.finish();
     }
+
 
     @MainThread
     private boolean isGoogleConfigured() {

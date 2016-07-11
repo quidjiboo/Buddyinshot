@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 
 
 public class Buddylist extends AppCompatActivity   {
+    private My_app app;
     private FirebaseAuth auth;
     private  FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -64,32 +65,16 @@ public class Buddylist extends AppCompatActivity   {
 
 
 
-        auth   = FirebaseAuth.getInstance();
+      //  auth   = FirebaseAuth.getInstance();
 
-  /*      mAuthListener  = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    Log.v("AKOV", "!!!!!!!Подключены!!!!!!!!!!" + user.getUid());
-                    // User is signed in
-                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                    Status_auth_changes.Chek_status_online_user_siglevalue_listner(mDatabase,user);
 
-                } else {
-                    // User is signed out
-                    Log.v("AKOV", "НЕ ПОДКЛЮЧЕНЫ");
-                }
-                // ...
-            }
-        };*/
-
+        app = ((My_app) getApplicationContext());
 
    //     populateProfile();
     }
 
     public void logout_action(View view) {
-        Status_auth_changes.logout_action(this,view);
+        Status_auth_changes_singltonne.getInstance().logout_action(this,view);
 
 
     }
@@ -97,6 +82,8 @@ public class Buddylist extends AppCompatActivity   {
     @Override
     protected void onStart() {
         super.onStart();
+         this.auth=app.getauth();
+        this. mAuthListener=app.getmAuthListener();
      //   auth.addAuthStateListener(mAuthListener);
     }
 
