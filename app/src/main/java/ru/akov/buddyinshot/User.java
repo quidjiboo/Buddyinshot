@@ -10,25 +10,25 @@ public class User {
 
     public String username;
     public String email;
-    String uid;
+    public String photourl;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String username, String email,String uid) {
+    public User(String username, String email,String photourl) {
         this.username = username;
         this.email = email;
-        this.uid = uid;
+        this.photourl = photourl;
     }
-    public String getName() {
+    public String getusername() {
         return username;
     }
-    public String getMail() {
+    public String getemail() {
         return email;
     }
-    public String getUid() {
-        return uid;
+    public String getphotourl() {
+        return photourl;
     }
 
 

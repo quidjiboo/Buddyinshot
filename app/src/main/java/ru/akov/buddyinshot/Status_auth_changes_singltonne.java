@@ -32,7 +32,7 @@ import com.google.firebase.database.ValueEventListener;
         return instance;
     }
 
-    public  void  Chek_status_online_user_siglevalue_listner(DatabaseReference mDatabase, FirebaseUser user ) {
+    public  void  Chek_status_online_user_siglevalue_listner(final DatabaseReference mDatabase,final FirebaseUser user ) {
 
          final String TAG = "NewPostActivity";
         final String userId = user.getUid();
@@ -47,10 +47,13 @@ import com.google.firebase.database.ValueEventListener;
 
                      //   User user = dataSnapshot.getValue(User.class);
 
-                       if(!dataSnapshot.exists())
-
+                       if(!dataSnapshot.exists()) {
+                           User msg = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
+                           mDatabase.child("users").child(userId).setValue(msg);
                            Log.v("AKOV", "NO USERS IN DATABASE");
+                       }
                         // ...
+
                     }
 
                     @Override

@@ -1,19 +1,13 @@
 package ru.akov.buddyinshot;
 
-import android.Manifest;
 import android.app.Application;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 /**
@@ -22,7 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class My_app extends Application {
 
 
-
+    private DatabaseReference mDatabase;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -38,9 +32,21 @@ public class My_app extends Application {
        super.onCreate();
 
         auth   = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+    }
+public FirebaseAuth getauth(){
+    return  auth;
+}
 
+    public FirebaseAuth.AuthStateListener  getmAuthListener(){
+        return  mAuthListener;
+    }
+
+    // вынести в отдельный класс
+public void createmAuthListener () {
+    if (mAuthListener == null) {
         Log.v("AKOV", "Повесил листер!!!!!");
-        mAuthListener  = new FirebaseAuth.AuthStateListener() {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -48,7 +54,7 @@ public class My_app extends Application {
                     Log.v("AKOV", "!!!!!!!Подключены!!!!!!!!!!" + user.getUid());
 
 
-
+                    Status_auth_changes_singltonne.getInstance().Chek_status_online_user_siglevalue_listner(mDatabase, auth.getCurrentUser());
                     //     next_scr(getCurrentFocus());
                     // User is signed in
 
@@ -61,14 +67,7 @@ public class My_app extends Application {
             }
         };
         auth.addAuthStateListener(mAuthListener);
-    }
-public FirebaseAuth getauth(){
-    return  auth;
+    };
 }
-
-    public FirebaseAuth.AuthStateListener  getmAuthListener(){
-        return  mAuthListener;
-    }
-
 
 }
