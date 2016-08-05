@@ -28,6 +28,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.akov.buddyinshot.MainActivity" />
         </activity>
+        <activity
+            android:name=".Loadtest"
+            android:label="@string/title_activity_buddylist"
+            android:parentActivityName=".Buddylist"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.akov.buddyinshot.Buddylist" />
+        </activity>
     </application>
 
 </manifest>

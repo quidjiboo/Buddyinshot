@@ -59,9 +59,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         app.createmAuthListener();
         this.auth=app.getauth();
-        this. mAuthListener=app.getmAuthListener();
+       // this. mAuthListener=app.getmAuthListener();
 
 
     }

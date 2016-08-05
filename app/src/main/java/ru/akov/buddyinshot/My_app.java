@@ -37,7 +37,9 @@ public class My_app extends Application {
 public FirebaseAuth getauth(){
     return  auth;
 }
-
+    public DatabaseReference getmDatabase(){
+        return  mDatabase;
+    }
     public FirebaseAuth.AuthStateListener  getmAuthListener(){
         return  mAuthListener;
     }

@@ -48,17 +48,21 @@
                 <TextView
                     android:id="@+id/user_email"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:autoText="false"
+                    android:text="user email" />
 
                 <TextView
                     android:id="@+id/user_display_name"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="user display name" />
 
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="test" />
 
             </LinearLayout>
         </LinearLayout>
@@ -67,6 +71,14 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="81dp"
+                android:layout_height="wrap_content"
+                android:text="Load"
+                android:id="@+id/put_to_storage"
+                android:onClick="put_to_storage" />
+
 
             <Button
                 style="?android:attr/buttonStyleSmall"
