@@ -15,7 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 public class My_app extends Application {
 
-
+    private boolean flag = true;
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -52,16 +52,20 @@ public void createmAuthListener () {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    Log.v("AKOV", "!!!!!!!Подключены!!!!!!!!!!" + user.getUid());
+                if (user != null){
+                Log.v("AKOV", "!!!!!!!Подключены!!!!!!!!!!" + user.getUid());
+                if (user != null    && flag)
 
+                    {
+                    //     next_scr(getCurrentFocus());
 
                     Status_auth_changes_singltonne.getInstance().Chek_status_online_user_siglevalue_listner(mDatabase, auth.getCurrentUser());
-                    //     next_scr(getCurrentFocus());
-                    // User is signed in
 
 
-                } else {
+                    flag = false;
+
+
+                }  } else {
                     // User is signed out
                     Log.v("AKOV", "НЕ ПОДКЛЮЧЕНЫ");
                 }
@@ -70,6 +74,8 @@ public void createmAuthListener () {
         };
         auth.addAuthStateListener(mAuthListener);
     };
+
+
 }
 
 }

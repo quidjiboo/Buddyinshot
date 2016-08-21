@@ -51,7 +51,11 @@ import com.google.firebase.database.ValueEventListener;
                            User msg = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
                            mDatabase.child("users").child(userId).setValue(msg);
                            Log.v("AKOV", "NO USERS IN DATABASE");
+
+                           add_default_barbeshop(mDatabase,user);
+
                        }
+
                         // ...
 
                     }
@@ -61,15 +65,27 @@ import com.google.firebase.database.ValueEventListener;
                         Log.w(TAG, "getUser:onCancelled", databaseError.toException());
                     }
                 });
+
+
+
+    }
+    public   void add_default_barbeshop(final DatabaseReference mDatabase,final FirebaseUser user ){
         //дефолтовыймагазин
-        mDatabase.child("shops").child(userId).addListenerForSingleValueEvent(
+        final String TAG = "ДЕФОЛТНЫЙ БАРБЕР ШОП";
+        final String userId = user.getUid();
+        mDatabase.child("users").child(userId).child("shops").addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         if(!dataSnapshot.exists()) {
-                            Shops msg = new Shops("noname", "notipe", "https://firebasestorage.googleapis.com/v0/b/test-base-soc-net.appspot.com/o/defaultshop.png?alt=media&token=92cc5bdb-bb0d-4a03-a292-da6ef5eb622d");
-                            mDatabase.child("shops").child(userId).setValue(msg);
+
+                            Shops msg = new Shops("noname", "notipe", "https://firebasestorage.googleapis.com/v0/b/test-base-soc-net.appspot.com/o/defaultshop.png?alt=media&token=92cc5bdb-bb0d-4a03-a292-da6ef5eb622d",userId);
+                        //    String key=mDatabase.child("shops").push().getKey();
+                            String key1 =   mDatabase.child("users").child(userId).child("shops").push().getKey();
+                            mDatabase.child("users").child(userId).child("shops").child(key1).setValue(Boolean.TRUE);
+                            mDatabase.child("shops").child(key1).setValue(msg);
+
                             Log.v("AKOV", "NO SHOPS");
                         }
                         // ...
@@ -81,9 +97,7 @@ import com.google.firebase.database.ValueEventListener;
                         Log.w(TAG, "getUser:onCancelled", databaseError.toException());
                     }
                 });
-
     }
-
 
 
     public   void login_action(FirebaseAuth auth,Activity activity) {

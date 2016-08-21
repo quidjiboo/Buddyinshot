@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -135,7 +136,7 @@ public class Loadtest extends AppCompatActivity   {
 
                 Glide.with(this)
                         .load(shop.getphotourl())
-.centerCrop()
+.centerCrop().crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(mShopPicPicture);
 
 

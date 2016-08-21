@@ -30,7 +30,7 @@
         </activity>
         <activity
             android:name=".Loadtest"
-            android:label="@string/title_activity_buddylist"
+            android:label="@string/title_activity_loadtest"
             android:parentActivityName=".Buddylist"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

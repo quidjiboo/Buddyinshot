@@ -7,7 +7,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
  */
 @IgnoreExtraProperties
 public class Shops {
-
+    public String admin;
     public String name;
     public String tipe_of_shop;
     public String photourl;
@@ -16,10 +16,11 @@ public class Shops {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public Shops(String name, String tipe_of_shop, String photourl) {
+    public Shops(String name, String tipe_of_shop, String photourl,String admin) {
         this.name = name;
         this.tipe_of_shop = tipe_of_shop;
         this.photourl = photourl;
+        this.admin = admin;
     }
     public String getname() {
         return name;
@@ -29,6 +30,9 @@ public class Shops {
     }
     public String getphotourl() {
         return photourl;
+    }
+    public String getadmin() {
+        return admin;
     }
 
 
