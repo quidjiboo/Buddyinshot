@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -121,7 +120,12 @@ public class Buddylist extends AppCompatActivity   {
     }
     public void logout_action(View view) {
         Status_auth_changes_singltonne.getInstance().logout_action(this,view);
+        Intent intent = new Intent(Buddylist.this, MainActivity.class);
 
+        startActivity(intent);
+
+
+        this.finish();
 
     }
 

@@ -61,6 +61,26 @@ import com.google.firebase.database.ValueEventListener;
                         Log.w(TAG, "getUser:onCancelled", databaseError.toException());
                     }
                 });
+        //дефолтовыймагазин
+        mDatabase.child("shops").child(userId).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if(!dataSnapshot.exists()) {
+                            Shops msg = new Shops("noname", "notipe", "https://firebasestorage.googleapis.com/v0/b/test-base-soc-net.appspot.com/o/defaultshop.png?alt=media&token=92cc5bdb-bb0d-4a03-a292-da6ef5eb622d");
+                            mDatabase.child("shops").child(userId).setValue(msg);
+                            Log.v("AKOV", "NO SHOPS");
+                        }
+                        // ...
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                    }
+                });
 
     }
 

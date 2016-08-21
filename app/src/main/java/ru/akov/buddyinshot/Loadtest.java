@@ -15,9 +15,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,8 +28,13 @@ public class Loadtest extends AppCompatActivity   {
     private FirebaseAuth auth;
     private  FirebaseAuth.AuthStateListener mAuthListener;
 
-
-
+    Shops shop;
+    @BindView(R.id.ShopPicPicture)
+    ImageView mShopPicPicture;
+    @BindView(R.id.Shop_text)
+    TextView mShop_text;
+    @BindView(R.id.Shop_tipe)
+    TextView mShop_tipe;
 
 
     @Override
@@ -66,17 +71,15 @@ public class Loadtest extends AppCompatActivity   {
 
 
 
-      //  auth   = FirebaseAuth.getInstance();
+
 
 
         app = ((My_app) getApplicationContext());
         this.auth=app.getauth();
         this. mAuthListener=app.getmAuthListener();
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://test-base-soc-net.appspot.com");
+        getshopInfo();
 
-        StorageReference mountainImagesRef = storageRef.child("images/mountains.jpg");
 
     }
 
@@ -100,6 +103,59 @@ public class Loadtest extends AppCompatActivity   {
 
     }
 
+    @MainThread
+    private void getshopInfo() {
+
+        app.getmDatabase().child("shops").child("KmxJEV9s5zfhN0Kz1oJUhQ9O01o1").addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user value
+                        shop = dataSnapshot.getValue(Shops.class);
+                        Log.w("SHIOP", "Получил данные магазина");
+                        populateProfile();
+                        // ...
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("OSHIBCAK", "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+    }
+
+    @MainThread
+    private void populateProfile() {
+
+
+        if(shop!=null){
+
+
+
+
+                Glide.with(this)
+                        .load(shop.getphotourl())
+.centerCrop()
+                        .into(mShopPicPicture);
+
+
+
+
+
+
+
+
+            mShop_text.setText(
+                    TextUtils.isEmpty(shop.getname()) ? "oops" : shop.getname());
+            mShop_tipe.setText(
+                    TextUtils.isEmpty(shop.gettipe_of_shop()) ? "oops" : shop.gettipe_of_shop());
+
+
+
+
+        } else {
+            Log.v("AKOV","NO SHOPS INFO!!!!!!!");
+        }}
 
 
 
