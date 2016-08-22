@@ -65,7 +65,11 @@ public void createmAuthListener () {
                     flag = false;
 
 
-                }  } else {
+                }
+                    myCallback.callBackReturn();
+                } else {
+
+                    myCallback.callBackReturnofff();
                     // User is signed out
                     Log.v("AKOV", "НЕ ПОДКЛЮЧЕНЫ");
                 }

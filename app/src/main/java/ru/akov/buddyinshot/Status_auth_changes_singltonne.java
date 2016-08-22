@@ -40,12 +40,6 @@ import com.google.firebase.database.ValueEventListener;
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get user value
-
-                   //     User msg = new User("puf", "1234", "Hello FirebaseUI world!");
-                 //       mDatabase.push().setValue(msg);
-
-                     //   User user = dataSnapshot.getValue(User.class);
 
                        if(!dataSnapshot.exists()) {
                            User msg = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
@@ -98,7 +92,32 @@ import com.google.firebase.database.ValueEventListener;
                     }
                 });
     }
-
+    public   ValueEventListener  shop_list_listner(final DatabaseReference mDatabase,ValueEventListener shop_list_listner){
+        //дефолтовыймагазин
+        final String TAG = "Список магазинов";
+     //   final String userId = user.getUid();
+        if(shop_list_listner!=null){
+        mDatabase.child("shops").addValueEventListener(
+                shop_list_listner =  new ValueEventListener() {@Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    for (DataSnapshot msgSnapshot: snapshot.getChildren()) {
+                        Shops msg = msgSnapshot.getValue(Shops.class);
+                        Log.i(TAG, msg.getname()+": "+snapshot.getKey());
+                    }
+                }
+                    @Override
+                    public void onCancelled(DatabaseError firebaseError) {
+                        Log.e(TAG, "The read failed: " + firebaseError.getMessage());
+                    }
+                });}
+        else{Log.i(TAG, "уже есть листнер");}
+        return  shop_list_listner;
+    }
+    public   void  remove_shop_list_listner(final DatabaseReference mDatabase,final ValueEventListener listenr ){
+        if(listenr!=null){
+        mDatabase.removeEventListener(listenr);
+        Log.e("удалил листнер", "удалил листнер!!!!");}
+    }
 
     public   void login_action(FirebaseAuth auth,Activity activity) {
 

@@ -10,15 +10,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements  MyCallback {
+    private ValueEventListener shop_list_listner;
     private static final String UNCHANGED_CONFIG_VALUE = "CHANGE-ME";
     private My_app app;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    private  ListView messagesView;
+    private  FirebaseListAdapter mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_main);
+
+        app = ((My_app) getApplicationContext());
+        app.registerCallBack(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -52,7 +63,38 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        app = ((My_app) getApplicationContext());
+
+        messagesView = (ListView) findViewById(R.id.list_of_shops);
+
+         mAdapter = new FirebaseListAdapter<Shops>(this, Shops.class, android.R.layout.simple_list_item_2, app.getmDatabase().child("shops")) {
+            @Override
+            protected void populateView(View view, Shops chatMessage, int position) {
+
+                ((TextView)view.findViewById(android.R.id.text1)).setText(chatMessage.getname());
+                ((TextView)view.findViewById(android.R.id.text2)).setText(chatMessage.gettipe_of_shop());
+
+            }
+        };
+
+        messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
+                                    long id) {
+          //      View textView = (View) itemClicked;
+
+                TextView textVie1   = (TextView)itemClicked.findViewById(android.R.id.text1);
+
+             //  String strText = textView.findViewById(android.R.id.text1).toString(); // получаем текст нажатого элемента
+                showSnackbar("выбран магазин"+textVie1.getText().toString());
+              /*  if(strText.equalsIgnoreCase(getResources().getString(R.string.name1))) {
+                    // Запускаем активность, связанную с определенным именем кота
+                    startActivity(new Intent(this, BarsikActivity.class));
+                }*/
+            }
+        });
+
+        messagesView.setAdapter(mAdapter);
+
 
     }
 
@@ -62,9 +104,16 @@ public class MainActivity extends AppCompatActivity {
 
         app.createmAuthListener();
         this.auth=app.getauth();
+
+
        // this. mAuthListener=app.getmAuthListener();
 
 
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAdapter.cleanup();
     }
 
     public void  curent_user_action(View view) {
@@ -163,5 +212,18 @@ public class MainActivity extends AppCompatActivity {
     @MainThread
     private void showSnackbar(String errorMessage) {
         Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void callBackReturn() {
+        shop_list_listner = Status_auth_changes_singltonne.getInstance().shop_list_listner(app.getmDatabase(), shop_list_listner);
+
+    }
+
+    @Override
+    public void callBackReturnofff() {
+        if(shop_list_listner!=null)
+        app.getmDatabase().removeEventListener(shop_list_listner);
+   //     Status_auth_changes_singltonne.getInstance().remove_shop_list_listner(app.getmDatabase(),shop_list_listner);
     }
 }

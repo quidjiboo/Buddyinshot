@@ -5,5 +5,5 @@ package ru.akov.buddyinshot;
  */
 interface MyCallback {
     void callBackReturn();
-
+    void callBackReturnofff();
 }
