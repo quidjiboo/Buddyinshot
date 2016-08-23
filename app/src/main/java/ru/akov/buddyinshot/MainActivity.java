@@ -86,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements  MyCallback {
 
              //  String strText = textView.findViewById(android.R.id.text1).toString(); // получаем текст нажатого элемента
                 showSnackbar("выбран магазин"+textVie1.getText().toString());
+
+
+                Intent intent = new Intent(MainActivity.this, Loadtest.class);
+                intent.putExtra("shopname", mAdapter.getRef(position).getKey().toString());
+                startActivity(intent);
+                finish();
               /*  if(strText.equalsIgnoreCase(getResources().getString(R.string.name1))) {
                     // Запускаем активность, связанную с определенным именем кота
                     startActivity(new Intent(this, BarsikActivity.class));

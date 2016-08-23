@@ -28,7 +28,7 @@ public class Loadtest extends AppCompatActivity   {
     private My_app app;
     private FirebaseAuth auth;
     private  FirebaseAuth.AuthStateListener mAuthListener;
-
+    private  String shopname_load = "noname_default";
     Shops shop;
     @BindView(R.id.ShopPicPicture)
     ImageView mShopPicPicture;
@@ -41,6 +41,8 @@ public class Loadtest extends AppCompatActivity   {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        shopname_load = getIntent().getStringExtra("shopname");
         setContentView(R.layout.activity_load);
         ButterKnife.bind(this);
 
@@ -107,7 +109,7 @@ public class Loadtest extends AppCompatActivity   {
     @MainThread
     private void getshopInfo() {
 
-        app.getmDatabase().child("shops").child("KmxJEV9s5zfhN0Kz1oJUhQ9O01o1").addListenerForSingleValueEvent(
+        app.getmDatabase().child("shops").child(shopname_load).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
