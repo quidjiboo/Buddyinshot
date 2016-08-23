@@ -19,10 +19,10 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements  MyCallback {
-    private ValueEventListener shop_list_listner;
+
     private static final String UNCHANGED_CONFIG_VALUE = "CHANGE-ME";
     private My_app app;
- //   private FirebaseAuth auth;
+
 
     private  ListView messagesView;
     private  FirebaseListAdapter mAdapter;
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements  MyCallback {
             public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
                                     long id) {
           //      View textView = (View) itemClicked;
-
+                Log.v("AKOV",  mAdapter.getRef(position).getKey());
                 TextView textVie1   = (TextView)itemClicked.findViewById(android.R.id.text1);
 
              //  String strText = textView.findViewById(android.R.id.text1).toString(); // получаем текст нажатого элемента
@@ -217,15 +217,12 @@ public class MainActivity extends AppCompatActivity implements  MyCallback {
 
     @Override
     public void callBackReturn() {
-    //    shop_list_listner = Status_auth_changes_singltonne.getInstance().shop_list_listner(app.getmDatabase(), shop_list_listner);
+
 
     }
 
     @Override
     public void callBackReturnofff() {
-        if(shop_list_listner!=null)
-        {Log.i("ЛИСТНЕР", "отключил листнер");
-        app.getmDatabase().removeEventListener(shop_list_listner);}
-   //     Status_auth_changes_singltonne.getInstance().remove_shop_list_listner(app.getmDatabase(),shop_list_listner);
+
     }
 }
