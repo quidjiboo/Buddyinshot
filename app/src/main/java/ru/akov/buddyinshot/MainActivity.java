@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,15 +16,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements  MyCallback {
     private ValueEventListener shop_list_listner;
     private static final String UNCHANGED_CONFIG_VALUE = "CHANGE-ME";
     private My_app app;
-    private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+ //   private FirebaseAuth auth;
+
     private  ListView messagesView;
     private  FirebaseListAdapter mAdapter;
     @Override
@@ -103,10 +103,11 @@ public class MainActivity extends AppCompatActivity implements  MyCallback {
         super.onStart();
 
         app.createmAuthListener();
-        this.auth=app.getauth();
+
+    //    this.auth=app.getauth(); // убрал зачемто
 
 
-       // this. mAuthListener=app.getmAuthListener();
+
 
 
     }
@@ -117,9 +118,10 @@ public class MainActivity extends AppCompatActivity implements  MyCallback {
     }
 
     public void  curent_user_action(View view) {
-        if (auth.getCurrentUser() != null) {
-            auth = FirebaseAuth.getInstance();
-            Snackbar.make(findViewById(android.R.id.content), auth.getCurrentUser().toString(), Snackbar.LENGTH_LONG).show();
+        if (app.getauth().getCurrentUser() != null) {
+
+        //    auth = FirebaseAuth.getInstance();
+            Snackbar.make(findViewById(android.R.id.content),app.getauth().getCurrentUser().toString(), Snackbar.LENGTH_LONG).show();
         } else {
 
             showSnackbar("НЕ ПОКДЛЮЧЕН!");
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements  MyCallback {
 
     public void login_action(View view) {
 
-        Status_auth_changes_singltonne.getInstance().login_action(auth,this);
+        Status_auth_changes_singltonne.getInstance().login_action(app.getauth(),this);
        }
 
     @Override
@@ -194,8 +196,7 @@ public class MainActivity extends AppCompatActivity implements  MyCallback {
         return super.onOptionsItemSelected(item);
     }
     public void next_scr(View view) {
-     //   Database_listners.getInstance().Authlisters_removers(mAuthListener,auth);
-      //  auth.removeAuthStateListener(mAuthListener);
+
         Intent intent = new Intent(MainActivity.this, Buddylist.class);
 
         startActivity(intent);
@@ -216,14 +217,15 @@ public class MainActivity extends AppCompatActivity implements  MyCallback {
 
     @Override
     public void callBackReturn() {
-        shop_list_listner = Status_auth_changes_singltonne.getInstance().shop_list_listner(app.getmDatabase(), shop_list_listner);
+    //    shop_list_listner = Status_auth_changes_singltonne.getInstance().shop_list_listner(app.getmDatabase(), shop_list_listner);
 
     }
 
     @Override
     public void callBackReturnofff() {
         if(shop_list_listner!=null)
-        app.getmDatabase().removeEventListener(shop_list_listner);
+        {Log.i("ЛИСТНЕР", "отключил листнер");
+        app.getmDatabase().removeEventListener(shop_list_listner);}
    //     Status_auth_changes_singltonne.getInstance().remove_shop_list_listner(app.getmDatabase(),shop_list_listner);
     }
 }

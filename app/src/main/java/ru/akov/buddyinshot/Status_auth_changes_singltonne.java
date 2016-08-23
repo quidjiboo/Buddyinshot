@@ -92,16 +92,18 @@ import com.google.firebase.database.ValueEventListener;
                     }
                 });
     }
-    public   ValueEventListener  shop_list_listner(final DatabaseReference mDatabase,ValueEventListener shop_list_listner){
+   /* public   ValueEventListener  shop_list_listner(final DatabaseReference mDatabase,ValueEventListener shop_list_listner){
         //дефолтовыймагазин
         final String TAG = "Список магазинов";
      //   final String userId = user.getUid();
-        if(shop_list_listner!=null){
+        if(shop_list_listner==null){
+
         mDatabase.child("shops").addValueEventListener(
                 shop_list_listner =  new ValueEventListener() {@Override
                 public void onDataChange(DataSnapshot snapshot) {
                     for (DataSnapshot msgSnapshot: snapshot.getChildren()) {
                         Shops msg = msgSnapshot.getValue(Shops.class);
+
                         Log.i(TAG, msg.getname()+": "+snapshot.getKey());
                     }
                 }
@@ -112,7 +114,7 @@ import com.google.firebase.database.ValueEventListener;
                 });}
         else{Log.i(TAG, "уже есть листнер");}
         return  shop_list_listner;
-    }
+    }*/
     public   void  remove_shop_list_listner(final DatabaseReference mDatabase,final ValueEventListener listenr ){
         if(listenr!=null){
         mDatabase.removeEventListener(listenr);
