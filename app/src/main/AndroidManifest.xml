@@ -37,6 +37,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.akov.buddyinshot.Buddylist" />
         </activity>
+        <activity
+            android:name=".Shop_Constructor"
+            android:label="@string/title_activity_loadtest"
+            android:parentActivityName=".Shop_Constructor"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.akov.buddyinshot.Shop_Constructor" />
+        </activity>
     </application>
 
 </manifest>

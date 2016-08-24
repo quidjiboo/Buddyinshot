@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -35,12 +36,15 @@ public class Buddylist extends AppCompatActivity   {
     private FirebaseAuth auth;
     private  FirebaseAuth.AuthStateListener mAuthListener;
 
+
+
     @BindView(R.id.user_profile_picture)
     ImageView mUserProfilePicture;
     @BindView(R.id.user_email)
     TextView mUserEmail;
     @BindView(R.id.user_display_name)
     TextView mUserDisplayName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -6,7 +6,6 @@ import android.support.annotation.MainThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,12 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,15 +26,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class Loadtest extends AppCompatActivity   {
-    private ListView messagesView;
-    private  FirebaseListAdapter mAdapter;
-
-    private Boolean Show_modifibutton=false;
+public class Shop_Constructor extends AppCompatActivity   {
     private My_app app;
     private FirebaseAuth auth;
     private  FirebaseAuth.AuthStateListener mAuthListener;
-    private  String shopname_load = "noname_default";
+
     Shops shop;
     @BindView(R.id.ShopPicPicture)
     ImageView mShopPicPicture;
@@ -45,31 +38,32 @@ public class Loadtest extends AppCompatActivity   {
     TextView mShop_text;
     @BindView(R.id.Shop_tipe)
     TextView mShop_tipe;
-
+    private  String shopname_load = "noname_default";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //если активити открыть без передачи в неё данных - пропускается пункт передачи названия шопа
+
         if(getIntent().getStringExtra("shopname")!=null){
-        shopname_load = getIntent().getStringExtra("shopname");}
+            shopname_load = getIntent().getStringExtra("shopname");}
         else{ shopname_load = "noname_default";}
 
+        app = ((My_app) getApplicationContext());
+        this.auth=app.getauth();
+        this. mAuthListener=app.getmAuthListener();
+
+        getshopInfo();
 
 
 
-
-        setContentView(R.layout.activity_load);
+        setContentView(R.layout.activity_construct);
         ButterKnife.bind(this);
 
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
-
-
         if (toolbar != null) {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,43 +89,23 @@ public class Loadtest extends AppCompatActivity   {
 
 
 
-        app = ((My_app) getApplicationContext());
-        this.auth=app.getauth();
-        this. mAuthListener=app.getmAuthListener();
-
-        getshopInfo();
 
 
-        messagesView = (ListView) findViewById(R.id.listView_products);
-        if(app.getmDatabase().child("shops").child(shopname_load).child("products")!=null) {
-            mAdapter = new FirebaseListAdapter<Product>(this, Product.class, android.R.layout.simple_list_item_2, app.getmDatabase().child("shops").child(shopname_load).child("products")) {
-                @Override
-                protected void populateView(View view, Product chatMessage, int position) {
-                    if (chatMessage != null) {
-                        ((TextView) view.findViewById(android.R.id.text1)).setText(chatMessage.getname());
-                        ((TextView) view.findViewById(android.R.id.text2)).setText(chatMessage.getprice());
-                    }
-                }
-            };
-            messagesView.setAdapter(mAdapter);
 
-        }
+
 
     }
 
-
+    public void add_product(View view) {
+Product product = new Product("default","0.0","https://firebasestorage.googleapis.com/v0/b/test-base-soc-net.appspot.com/o/shopping-paper-bag-outline_318-39786.png?alt=media&token=93a2373e-1336-4fbe-9268-924db09e4fb9");
+        String key = app.getmDatabase().child("shops").child(shopname_load).child("products").push().getKey();
+        app.getmDatabase().child("shops").child(shopname_load).child("products").child(key).setValue(product);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-   //
         // Inflate the menu; this adds items to the action bar if it is present.
-
-        getMenuInflater().inflate(R.menu.menu_shop, menu);
-        if(!Show_modifibutton){
-        MenuItem item = menu.findItem(R.id.action_modify_shop);
-        item.setVisible(false);}
-
-
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
     @Override
@@ -146,14 +120,7 @@ public class Loadtest extends AppCompatActivity   {
 
             return true;
         }
-        if (id == R.id.action_modify_shop) {
-            Intent intent = new Intent(Loadtest.this, Shop_Constructor.class);
-            intent.putExtra("shopname",shopname_load);
-            startActivity(intent);
-            finish();
 
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -168,7 +135,7 @@ public class Loadtest extends AppCompatActivity   {
 
     public void next_scr(View view) {
 
-        Intent intent = new Intent(Loadtest.this, Buddylist.class);
+        Intent intent = new Intent(Shop_Constructor.this, Buddylist.class);
 
         startActivity(intent);
 
@@ -186,19 +153,10 @@ public class Loadtest extends AppCompatActivity   {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user value
                         shop = dataSnapshot.getValue(Shops.class);
-                          Log.w("SHIOP", "Получилаю данные магазина.....");
 
-                    if(shop!=null){
-
-
-                        if(shop.getadmin().toString().equals(app.getauth().getCurrentUser().getUid())){
-                            Show_modifibutton=true; }
+                        Log.w("SHIOP", "Получил данные магазина");
                         populateProfile();
                         // ...
-                        }
-                        else{
-                        Log.v("AKOV","Нет данных по магазину!!!!!!!");
-                       }
                     }
 
                     @Override
@@ -212,7 +170,7 @@ public class Loadtest extends AppCompatActivity   {
     private void populateProfile() {
 
 
-
+        if(shop!=null){
 
 
 
@@ -237,8 +195,9 @@ public class Loadtest extends AppCompatActivity   {
 
 
 
-
-        }
+        } else {
+            Log.v("AKOV","NO SHOPS INFO!!!!!!!");
+        }}
 
 
 

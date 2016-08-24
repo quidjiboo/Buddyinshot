@@ -80,6 +80,11 @@ import com.google.firebase.database.ValueEventListener;
                             mDatabase.child("users").child(userId).child("shops").child(key1).setValue(Boolean.TRUE);
                             mDatabase.child("shops").child(key1).setValue(msg);
 
+                            Product product = new Product("default","0.0","https://firebasestorage.googleapis.com/v0/b/test-base-soc-net.appspot.com/o/shopping-paper-bag-outline_318-39786.png?alt=media&token=93a2373e-1336-4fbe-9268-924db09e4fb9");
+                            String key = mDatabase.child("shops").child(key1).child("products").push().getKey();
+                            mDatabase.child("shops").child(key1).child("products").child(key).setValue(product);
+
+
                             Log.v("AKOV", "NO SHOPS");
                         }
                         // ...
