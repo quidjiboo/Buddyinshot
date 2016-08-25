@@ -188,6 +188,7 @@ public class Loadtest extends AppCompatActivity   {
                         shop = dataSnapshot.getValue(Shops.class);
                           Log.w("SHIOP", "Получилаю данные магазина.....");
 
+    Log.v("AKOV",app.getauth().getCurrentUser().toString());
                     if(shop!=null){
 
 
@@ -213,21 +214,10 @@ public class Loadtest extends AppCompatActivity   {
 
 
 
-
-
-
-
                 Glide.with(this)
                         .load(shop.getphotourl())
 .centerCrop().crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(mShopPicPicture);
-
-
-
-
-
-
-
 
             mShop_text.setText(
                     TextUtils.isEmpty(shop.getname()) ? "oops" : shop.getname());
