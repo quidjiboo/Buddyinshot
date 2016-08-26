@@ -215,7 +215,11 @@ public class Loadtest extends AppCompatActivity   {
         }
 
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAdapter.cleanup();
+    }
     @MainThread
     private void populateProfile() {
 
