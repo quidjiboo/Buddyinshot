@@ -69,7 +69,7 @@ public class Loadtest extends AppCompatActivity   {
 
         setSupportActionBar(toolbar);
 
-
+//Странная проверка !! продумать
         if (toolbar != null) {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,23 +99,10 @@ public class Loadtest extends AppCompatActivity   {
         this.auth=app.getauth();
         this. mAuthListener=app.getmAuthListener();
 
-        getshopInfo();
+
+            getshopInfo();
 
 
-        messagesView = (ListView) findViewById(R.id.listView_products);
-        if(app.getmDatabase().child("shops").child(shopname_load).child("products")!=null) {
-            mAdapter = new FirebaseListAdapter<Product>(this, Product.class, android.R.layout.simple_list_item_2, app.getmDatabase().child("shops").child(shopname_load).child("products")) {
-                @Override
-                protected void populateView(View view, Product chatMessage, int position) {
-                    if (chatMessage != null) {
-                        ((TextView) view.findViewById(android.R.id.text1)).setText(chatMessage.getname());
-                        ((TextView) view.findViewById(android.R.id.text2)).setText(chatMessage.getprice());
-                    }
-                }
-            };
-            messagesView.setAdapter(mAdapter);
-
-        }
 
     }
 
@@ -188,12 +175,14 @@ public class Loadtest extends AppCompatActivity   {
                         shop = dataSnapshot.getValue(Shops.class);
                           Log.w("SHIOP", "Получилаю данные магазина.....");
 
-    Log.v("AKOV",app.getauth().getCurrentUser().toString());
+  //  Log.v("AKOV",app.getauth().getCurrentUser().toString());
                     if(shop!=null){
 
-
-                        if(shop.getadmin().toString().equals(app.getauth().getCurrentUser().getUid())){
+//проверка на наличие залогиненого пользователя
+                        if(app.getauth().getCurrentUser()!=null&&shop.getadmin().toString().equals(app.getauth().getCurrentUser().getUid())){
                             Show_modifibutton=true; }
+
+
                         populateProfile();
                         // ...
                         }
@@ -207,6 +196,24 @@ public class Loadtest extends AppCompatActivity   {
                         Log.w("OSHIBCAK", "getUser:onCancelled", databaseError.toException());
                     }
                 });
+
+
+///ЗАполнение списка товаров
+        messagesView = (ListView) findViewById(R.id.listView_products);
+        if (app.getmDatabase().child("shops").child(shopname_load).child("products") != null) {
+            mAdapter = new FirebaseListAdapter<Product>(this, Product.class, android.R.layout.simple_list_item_2, app.getmDatabase().child("shops").child(shopname_load).child("products")) {
+                @Override
+                protected void populateView(View view, Product chatMessage, int position) {
+                    if (chatMessage != null) {
+                        ((TextView) view.findViewById(android.R.id.text1)).setText(chatMessage.getname());
+                        ((TextView) view.findViewById(android.R.id.text2)).setText(chatMessage.getprice());
+                    }
+                }
+            };
+            messagesView.setAdapter(mAdapter);
+
+        }
+
     }
 
     @MainThread
@@ -221,8 +228,14 @@ public class Loadtest extends AppCompatActivity   {
 
             mShop_text.setText(
                     TextUtils.isEmpty(shop.getname()) ? "oops" : shop.getname());
-            mShop_tipe.setText(
-                    TextUtils.isEmpty(shop.gettipe_of_shop()) ? "oops" : shop.gettipe_of_shop());
+        //Преобразование типа с английского на русскай
+        String tipeofshop="noname";
+        switch (shop.gettipe_of_shop()) {
+            case "barbershop":  tipeofshop = "парикмахерская";
+                break;}
+            mShop_tipe.setText(tipeofshop);
+
+                    //TextUtils.isEmpty(shop.gettipe_of_shop()) ? "oops" : shop.gettipe_of_shop());
 
 
 

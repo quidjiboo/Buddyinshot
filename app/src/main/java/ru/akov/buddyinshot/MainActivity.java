@@ -68,10 +68,16 @@ public class MainActivity extends AppCompatActivity implements  MyCallback {
 
          mAdapter = new FirebaseListAdapter<Shops>(this, Shops.class, android.R.layout.simple_list_item_2, app.getmDatabase().child("shops")) {
             @Override
-            protected void populateView(View view, Shops chatMessage, int position) {
+            protected void populateView(View view, Shops shop, int position) {
 
-                ((TextView)view.findViewById(android.R.id.text1)).setText(chatMessage.getname());
-                ((TextView)view.findViewById(android.R.id.text2)).setText(chatMessage.gettipe_of_shop());
+                ((TextView)view.findViewById(android.R.id.text1)).setText(shop.getname());
+                //Преобразование типа с английского на русскай
+                String tipeofshop="noname";
+                switch (shop.gettipe_of_shop()) {
+                    case "barbershop":  tipeofshop = "парикмахерская";
+                        break;}
+
+                ((TextView)view.findViewById(android.R.id.text2)).setText(tipeofshop);
 
             }
         };
