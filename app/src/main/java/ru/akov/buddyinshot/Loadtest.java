@@ -6,13 +6,13 @@ import android.support.annotation.MainThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,6 +24,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -210,6 +215,74 @@ public class Loadtest extends AppCompatActivity   {
                     }
                 }
             };
+
+            messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, final View itemClicked, int position,
+                                        long id) {
+
+                    TextView textVie1   = (TextView)itemClicked.findViewById(android.R.id.text1);
+                    showSnackbar("ЗАявка подана"+textVie1.getText().toString());
+
+
+                    final CaldroidFragment dialogCaldroidFragment = CaldroidFragment.newInstance("Select a date", 3, 2013);
+                    dialogCaldroidFragment.setCancelable(true);
+
+                    Bundle args = new Bundle();
+                    Calendar cal = Calendar.getInstance();
+                    args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+                    args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+                    dialogCaldroidFragment.setArguments(args);
+
+                    final CaldroidListener listener = new CaldroidListener() {
+
+                        @Override
+                        public void onSelectDate(Date date, View view) {
+
+                            showSnackbar("Выбрал дату"+date.toString());
+
+                            dialogCaldroidFragment.getDialog().dismiss();
+
+                        }
+
+                        @Override
+                        public void onChangeMonth(int month, int year) {
+
+                        }
+
+                        @Override
+                        public void onLongClickDate(Date date, View view) {
+
+                        }
+
+                        @Override
+                        public void onCaldroidViewCreated() {
+
+
+
+                        }
+
+                    };
+
+                    dialogCaldroidFragment.setCaldroidListener(listener);
+
+
+
+
+                    dialogCaldroidFragment.show(getSupportFragmentManager(),"TAG");
+/*
+                    Intent intent = new Intent(MainActivity.this, Loadtest.class);
+                    intent.putExtra("shopname", mAdapter.getRef(position).getKey().toString());
+                    startActivity(intent);
+                    finish();
+*/
+
+                }
+            });
+
+
+
+
             messagesView.setAdapter(mAdapter);
 
         }
@@ -247,6 +320,9 @@ public class Loadtest extends AppCompatActivity   {
 
         }
 
-
+    @MainThread
+    private void showSnackbar(String errorMessage) {
+        Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_LONG).show();
+    }
 
 }
