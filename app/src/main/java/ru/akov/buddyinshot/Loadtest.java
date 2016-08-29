@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -35,6 +36,11 @@ import butterknife.ButterKnife;
 
 
 public class Loadtest extends AppCompatActivity   {
+    private ArrayList<Date> MydisableDateList;
+    private ArrayList<String> MyStringdisableDateList;
+    private String myposition;
+    private Date zakaz;
+
     private ListView messagesView;
     private  FirebaseListAdapter mAdapter;
 
@@ -55,7 +61,8 @@ public class Loadtest extends AppCompatActivity   {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        MyStringdisableDateList = new ArrayList<>();
+        MydisableDateList = new ArrayList<>();
         //если активити открыть без передачи в неё данных - пропускается пункт передачи названия шопа
         if(getIntent().getStringExtra("shopname")!=null){
         shopname_load = getIntent().getStringExtra("shopname");}
@@ -188,6 +195,8 @@ public class Loadtest extends AppCompatActivity   {
                             Show_modifibutton=true; }
 
 
+
+
                         populateProfile();
                         // ...
                         }
@@ -222,7 +231,34 @@ public class Loadtest extends AppCompatActivity   {
                                         long id) {
 
                     TextView textVie1   = (TextView)itemClicked.findViewById(android.R.id.text1);
-                    showSnackbar("ЗАявка подана"+textVie1.getText().toString());
+                    showSnackbar("Нажал на товар = "+textVie1.getText().toString());
+                    myposition=mAdapter.getRef(position).getKey().toString();
+//массив с забитыми днями
+                   app.getmDatabase().child("shops").child(shopname_load).child("products").child(myposition).child("workdays").addListenerForSingleValueEvent(
+                            new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    MyStringdisableDateList.clear();
+                                    if(dataSnapshot!=null){
+
+                                    for (DataSnapshot RestNames : dataSnapshot.getChildren()) {
+
+                                     //   MyStringdisableDateList.add(dataSnapshot.getValue().toString());
+                                        Log.w("В СПИСОК ДНЕЙ ПЛОХИХ", dataSnapshot.getValue().toString());
+                                     }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.w("В заказах пусто", "getUser:onCancelled", databaseError.toException());
+                                }
+                            });
+
+
+
+
+
 
 
                     final CaldroidFragment dialogCaldroidFragment = CaldroidFragment.newInstance("Select a date", 3, 2013);
@@ -232,17 +268,29 @@ public class Loadtest extends AppCompatActivity   {
                     Calendar cal = Calendar.getInstance();
                     args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
                     args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+                    if(!MydisableDateList.isEmpty()){
+                        Log.w("MydisableDateList!!!!!",MydisableDateList.get(0).toString());
+                  //  dialogCaldroidFragment.setDisableDates(MydisableDateList);
+                        dialogCaldroidFragment.setDisableDatesFromString(MyStringdisableDateList);
+                    }
                     dialogCaldroidFragment.setArguments(args);
 
-                    final CaldroidListener listener = new CaldroidListener() {
+                    final CaldroidListener    listener = new CaldroidListener() {
 
                         @Override
-                        public void onSelectDate(Date date, View view) {
-
-                            showSnackbar("Выбрал дату"+date.toString());
-
+                        public void onSelectDate(Date date1, View view) {
+                    if(date1.before(Calendar.getInstance().getTime()))
+                        showSnackbar("Выбеи другую дату");
+                          else{
+                            showSnackbar("Выбрал дату"+date1.toString());
+                            MydisableDateList.add(date1);
+                            zakaz=date1;
+                       String month = (String) android.text.format.DateFormat.format("MM", date1); //06
+                       String year = (String) android.text.format.DateFormat.format("yyyy", date1); //2013
+                        String  day = (String) android.text.format.DateFormat.format("dd", date1);
+                        MyDate_format my_date = new MyDate_format(month,year,day);
                             dialogCaldroidFragment.getDialog().dismiss();
-
+                            app.getmDatabase().child("shops").child(shopname_load).child("products").child(myposition).child("workdays").push().setValue(my_date);}
                         }
 
                         @Override
