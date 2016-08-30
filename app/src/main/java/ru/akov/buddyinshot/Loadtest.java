@@ -36,6 +36,7 @@ import butterknife.ButterKnife;
 
 
 public class Loadtest extends AppCompatActivity   {
+    private ValueEventListener val;
     private ArrayList<Date> MydisableDateList;
     private ArrayList<String> MyStringdisableDateList;
     private String myposition;
@@ -180,7 +181,7 @@ public class Loadtest extends AppCompatActivity   {
     private void getshopInfo() {
 
         app.getmDatabase().child("shops").child(shopname_load).addListenerForSingleValueEvent(
-                new ValueEventListener() {
+                 val =  new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user value
