@@ -49,7 +49,7 @@ public class Loadtest extends AppCompatActivity   {
     private FirebaseAuth auth;
     private  FirebaseAuth.AuthStateListener mAuthListener;
     private  String shopname_load = "noname_default";
-    Shops shop;
+    private Shops shop;
     @BindView(R.id.ShopPicPicture)
     ImageView mShopPicPicture;
     @BindView(R.id.Shop_text)
@@ -213,111 +213,105 @@ public class Loadtest extends AppCompatActivity   {
 
 
 ///ЗАполнение списка товаров
-        messagesView = (ListView) findViewById(R.id.listView_products);
-        if (app.getmDatabase().child("shops").child(shopname_load).child("products") != null) {
-            mAdapter = new FirebaseListAdapter<Product>(this, Product.class, android.R.layout.simple_list_item_2, app.getmDatabase().child("shops").child(shopname_load).child("products")) {
-                @Override
-                protected void populateView(View view, Product chatMessage, int position) {
-                    if (chatMessage != null) {
-                        ((TextView) view.findViewById(android.R.id.text1)).setText(chatMessage.getname());
-                        ((TextView) view.findViewById(android.R.id.text2)).setText(chatMessage.getprice());
+            messagesView = (ListView) findViewById(R.id.listView_products);
+            if (app.getmDatabase().child("shops").child(shopname_load).child("products") != null) {
+                mAdapter = new FirebaseListAdapter<Product>(this, Product.class, android.R.layout.simple_list_item_2, app.getmDatabase().child("shops").child(shopname_load).child("products")) {
+                    @Override
+                    protected void populateView(View view, Product chatMessage, int position) {
+                        if (chatMessage != null) {
+                            ((TextView) view.findViewById(android.R.id.text1)).setText(chatMessage.getname());
+                            ((TextView) view.findViewById(android.R.id.text2)).setText(chatMessage.getprice());
+                        }
                     }
-                }
-            };
+                };
 
-            messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, final View itemClicked, int position,
-                                        long id) {
+                messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, final View itemClicked, int position,
+                                            long id) {
 
-                    TextView textVie1   = (TextView)itemClicked.findViewById(android.R.id.text1);
-                    showSnackbar("Нажал на товар = "+textVie1.getText().toString());
-                    myposition=mAdapter.getRef(position).getKey().toString();
+                        TextView textVie1 = (TextView) itemClicked.findViewById(android.R.id.text1);
+                        showSnackbar("Нажал на товар = " + textVie1.getText().toString());
+                        myposition = mAdapter.getRef(position).getKey().toString();
 //массив с забитыми днями
-                   app.getmDatabase().child("shops").child(shopname_load).child("products").child(myposition).child("workdays").addListenerForSingleValueEvent(
-                            new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    MyStringdisableDateList.clear();
-                                    if(dataSnapshot!=null){
+                        app.getmDatabase().child("shops").child(shopname_load).child("products").child(myposition).child("workdays").addListenerForSingleValueEvent(
+                                new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        MyStringdisableDateList.clear();
+                                        if (dataSnapshot != null) {
 
-                                    for (DataSnapshot RestNames : dataSnapshot.getChildren()) {
+                                            for (DataSnapshot RestNames : dataSnapshot.getChildren()) {
 
-                                     //   MyStringdisableDateList.add(dataSnapshot.getValue().toString());
-                                        Log.w("В СПИСОК ДНЕЙ ПЛОХИХ", dataSnapshot.getValue().toString());
-                                     }
+                                                //   MyStringdisableDateList.add(dataSnapshot.getValue().toString());
+                                                Log.w("В СПИСОК ЗАнятых дел", dataSnapshot.getValue().toString());
+                                            }
+                                        }
                                     }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.w("В заказах пусто", "getUser:onCancelled", databaseError.toException());
+                                    }
+                                });
+
+
+                        final CaldroidFragment dialogCaldroidFragment = CaldroidFragment.newInstance("Select a date", 3, 2013);
+                        dialogCaldroidFragment.setCancelable(true);
+
+                        Bundle args = new Bundle();
+                        Calendar cal = Calendar.getInstance();
+                        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+                        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+                        if (!MydisableDateList.isEmpty()) {
+                            Log.w("MydisableDateList!!!!!", MydisableDateList.get(0).toString());
+                            //  dialogCaldroidFragment.setDisableDates(MydisableDateList);
+                            dialogCaldroidFragment.setDisableDatesFromString(MyStringdisableDateList);
+                        }
+                        dialogCaldroidFragment.setArguments(args);
+
+                        final CaldroidListener listener = new CaldroidListener() {
+
+                            @Override
+                            public void onSelectDate(Date date1, View view) {
+                                if (date1.before(Calendar.getInstance().getTime()))
+                                    showSnackbar("Выбеи другую дату");
+                                else {
+                                    showSnackbar("Выбрал дату" + date1.toString());
+                                    MydisableDateList.add(date1);
+                                    zakaz = date1;
+                                    String month = (String) android.text.format.DateFormat.format("MM", date1); //06
+                                    String year = (String) android.text.format.DateFormat.format("yyyy", date1); //2013
+                                    String day = (String) android.text.format.DateFormat.format("dd", date1);
+                                    String zapis = year + month + day;
+                                    MyDate_format my_date = new MyDate_format(month, year, day);
+                                    dialogCaldroidFragment.getDialog().dismiss();
+                                    // ЗАполеяю в базе поля _ в самом магащзине и надо добавить пользователю в личной папке !!!
+                                    // app.getmDatabase().child("shops").child(shopname_load).child("products").child(myposition).child("workdays").push().setValue(my_date);}
+                                    app.getmDatabase().child("shops").child(shopname_load).child("products").child(myposition).child("workdays").child(zapis).push().setValue(app.getauth().getCurrentUser().getUid());
                                 }
+                            }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.w("В заказах пусто", "getUser:onCancelled", databaseError.toException());
-                                }
-                            });
+                            @Override
+                            public void onChangeMonth(int month, int year) {
 
+                            }
 
+                            @Override
+                            public void onLongClickDate(Date date, View view) {
 
+                            }
 
-
-
-
-                    final CaldroidFragment dialogCaldroidFragment = CaldroidFragment.newInstance("Select a date", 3, 2013);
-                    dialogCaldroidFragment.setCancelable(true);
-
-                    Bundle args = new Bundle();
-                    Calendar cal = Calendar.getInstance();
-                    args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-                    args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
-                    if(!MydisableDateList.isEmpty()){
-                        Log.w("MydisableDateList!!!!!",MydisableDateList.get(0).toString());
-                  //  dialogCaldroidFragment.setDisableDates(MydisableDateList);
-                        dialogCaldroidFragment.setDisableDatesFromString(MyStringdisableDateList);
-                    }
-                    dialogCaldroidFragment.setArguments(args);
-
-                    final CaldroidListener    listener = new CaldroidListener() {
-
-                        @Override
-                        public void onSelectDate(Date date1, View view) {
-                    if(date1.before(Calendar.getInstance().getTime()))
-                        showSnackbar("Выбеи другую дату");
-                          else{
-                            showSnackbar("Выбрал дату"+date1.toString());
-                            MydisableDateList.add(date1);
-                            zakaz=date1;
-                       String month = (String) android.text.format.DateFormat.format("MM", date1); //06
-                       String year = (String) android.text.format.DateFormat.format("yyyy", date1); //2013
-                        String  day = (String) android.text.format.DateFormat.format("dd", date1);
-                        MyDate_format my_date = new MyDate_format(month,year,day);
-                            dialogCaldroidFragment.getDialog().dismiss();
-                            app.getmDatabase().child("shops").child(shopname_load).child("products").child(myposition).child("workdays").push().setValue(my_date);}
-                        }
-
-                        @Override
-                        public void onChangeMonth(int month, int year) {
-
-                        }
-
-                        @Override
-                        public void onLongClickDate(Date date, View view) {
-
-                        }
-
-                        @Override
-                        public void onCaldroidViewCreated() {
+                            @Override
+                            public void onCaldroidViewCreated() {
 
 
+                            }
 
-                        }
+                        };
 
-                    };
-
-                    dialogCaldroidFragment.setCaldroidListener(listener);
-
-
-
-
-                    dialogCaldroidFragment.show(getSupportFragmentManager(),"TAG");
+                        dialogCaldroidFragment.setCaldroidListener(listener);
+                        dialogCaldroidFragment.show(getSupportFragmentManager(), "TAG");
 /*
                     Intent intent = new Intent(MainActivity.this, Loadtest.class);
                     intent.putExtra("shopname", mAdapter.getRef(position).getKey().toString());
@@ -325,15 +319,13 @@ public class Loadtest extends AppCompatActivity   {
                     finish();
 */
 
-                }
-            });
+                    }
+                });
 
 
+                messagesView.setAdapter(mAdapter);
 
-
-            messagesView.setAdapter(mAdapter);
-
-        }
+            }
 
     }
     @Override
