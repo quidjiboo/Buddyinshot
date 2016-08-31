@@ -35,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class Loadtest extends AppCompatActivity   {
+public class Loadtest_beckup extends AppCompatActivity   {
     private ValueEventListener val;
     private ArrayList<Date> MydisableDateList;
     private ArrayList<String> MyStringdisableDateList;
@@ -147,7 +147,7 @@ public class Loadtest extends AppCompatActivity   {
             return true;
         }
         if (id == R.id.action_modify_shop) {
-            Intent intent = new Intent(Loadtest.this, Shop_Constructor.class);
+            Intent intent = new Intent(Loadtest_beckup.this, Shop_Constructor.class);
             intent.putExtra("shopname",shopname_load);
             startActivity(intent);
             finish();
@@ -168,7 +168,7 @@ public class Loadtest extends AppCompatActivity   {
 
     public void next_scr(View view) {
 
-        Intent intent = new Intent(Loadtest.this, Buddylist.class);
+        Intent intent = new Intent(Loadtest_beckup.this, Buddylist.class);
 
         startActivity(intent);
 
@@ -189,15 +189,17 @@ public class Loadtest extends AppCompatActivity   {
                           Log.w("SHIOP", "Получилаю данные магазина.....");
 
   //  Log.v("AKOV",app.getauth().getCurrentUser().toString());
+                    if(shop!=null){
 
-                        if(shop!=null){
-
-                            if(shop!=null){
-                                populateProfile();}
-//проверка на наличие залогиненого пользователя и соотвесвия владельца магазина пользователю
-                        if(shop!=null&&app.getauth().getCurrentUser()!=null&&shop.getadmin().toString().equals(app.getauth().getCurrentUser().getUid())){
+//проверка на наличие залогиненого пользователя
+                        if(app.getauth().getCurrentUser()!=null&&shop.getadmin().toString().equals(app.getauth().getCurrentUser().getUid())){
                             Show_modifibutton=true; }
 
+
+
+
+                        populateProfile();
+                        // ...
                         }
                         else{
                         Log.v("AKOV","Нет данных по магазину!!!!!!!");
@@ -352,6 +354,10 @@ public class Loadtest extends AppCompatActivity   {
             mShop_tipe.setText(tipeofshop);
 
                     //TextUtils.isEmpty(shop.gettipe_of_shop()) ? "oops" : shop.gettipe_of_shop());
+
+
+
+
 
         }
 
