@@ -32,6 +32,8 @@ import com.google.firebase.database.ValueEventListener;
         return instance;
     }
 
+
+
     public  void  Chek_status_online_user_siglevalue_listner(final DatabaseReference mDatabase,final FirebaseUser user ) {
 
          final String TAG = "NewPostActivity";

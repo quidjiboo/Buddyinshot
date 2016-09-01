@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity implements  MyCallback {
+public class MainActivity extends AppCompatActivity implements  MyCallbackOLD {
 
     private static final String UNCHANGED_CONFIG_VALUE = "CHANGE-ME";
     private My_app app;
@@ -232,6 +232,8 @@ public class MainActivity extends AppCompatActivity implements  MyCallback {
 
 
     }
+
+
 
     @Override
     public void callBackReturnofff() {

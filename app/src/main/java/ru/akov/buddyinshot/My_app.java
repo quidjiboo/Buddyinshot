@@ -20,9 +20,9 @@ public class My_app extends Application {
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    MyCallback myCallback;
+    MyCallbackOLD myCallback;
 
-    void registerCallBack(MyCallback callback){
+    void registerCallBack(MyCallbackOLD callback){
         this.myCallback = callback;
     }
 
