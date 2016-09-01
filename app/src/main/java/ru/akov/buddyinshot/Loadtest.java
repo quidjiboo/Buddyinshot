@@ -38,21 +38,26 @@ import butterknife.ButterKnife;
 public class Loadtest extends AppCompatActivity  implements MyCallback  {
 
     private AdapterView.OnItemClickListener mylistner;
-    private Helper_list helper;
-    private ValueEventListener val;
-    private ArrayList<Date> MydisableDateList;
-    private ArrayList<String> MyStringdisableDateList;
-    private String myposition;
-    private Date zakaz;
+
+
+    private Helper_Listers helper_Db_listenr;
+    private ValueEventListener shop_listner;
 
     private ListView messagesView;
     private  FirebaseListAdapter mAdapter;
 
-    private Boolean Show_modifibutton=false;
     private My_app app;
     private FirebaseAuth auth;
     private  FirebaseAuth.AuthStateListener mAuthListener;
+
+    //переменные от которых зависит загрузка
     private  String shopname_load = "noname_default";
+    private  String tipe_shop = "noname_default";
+    private Boolean Show_modifibutton=false;
+
+//временные
+    private ArrayList<Date> MydisableDateList;
+    private ArrayList<String> MyStringdisableDateList;
 
     @BindView(R.id.ShopPicPicture)
     ImageView mShopPicPicture;
@@ -67,9 +72,10 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
 
 
         super.onCreate(savedInstanceState);
-        helper = new Helper_list();
-        helper.registerCallBack(this);
-        //Status_auth_changes_singltonne.getInstance().registerCallBack(this);
+
+        helper_Db_listenr = new Helper_Listers();
+        helper_Db_listenr.registerCallBack(this);
+
 
         MyStringdisableDateList = new ArrayList<>();
         MydisableDateList = new ArrayList<>();
@@ -78,13 +84,8 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
         shopname_load = getIntent().getStringExtra("shopname");}
         else{ shopname_load = "noname_default";}
 
-
-
-
-
         setContentView(R.layout.activity_load);
         ButterKnife.bind(this);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -94,7 +95,6 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
                 @Override
                 public void onClick(View view) {
                   next_scr(getCurrentFocus());
-
                 }
             });
         }
@@ -116,9 +116,9 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
         this.auth=app.getauth();
         this. mAuthListener=app.getmAuthListener();
 
-        helper.chek_shop(app.getmDatabase(),auth.getCurrentUser(),shopname_load);
-        messagesView_set();
-
+        //создаём листнера по товарам в магазине... смотри callBackReturn_populateprofile
+        shop_listner=helper_Db_listenr.chek_shop(auth.getCurrentUser(),shopname_load);
+        app.getmDatabase().child("shops").child(shopname_load).addListenerForSingleValueEvent(shop_listner);
     }
 
 
@@ -168,22 +168,9 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
         this.finish();
 
     }
-    private  void Listner_lista_caledaria(){
-
-        mylistner = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View itemClicked, int position, long id) {
-                TextView textVie1 = (TextView) itemClicked.findViewById(android.R.id.text1);
-                showSnackbar("Нажал на товар = " + textVie1.getText().toString());
-                myposition = mAdapter.getRef(position).getKey().toString();
-
-            }
-        } ;
 
 
-    }
-
-    private  void calendar_creator(){
+    private  void calendar_creator(final String myposition, String tipe_shop){
 
         final CaldroidFragment dialogCaldroidFragment = CaldroidFragment.newInstance("Select a date", 3, 2013);
         dialogCaldroidFragment.setCancelable(true);
@@ -211,7 +198,6 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
                     else {
                         showSnackbar("Выбрал дату" + date1.toString());
                         MydisableDateList.add(date1);
-                        zakaz = date1;
                         String month = (String) android.text.format.DateFormat.format("MM", date1); //06
                         String year = (String) android.text.format.DateFormat.format("yyyy", date1); //2013
                         String day = (String) android.text.format.DateFormat.format("dd", date1);
@@ -251,57 +237,18 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
         dialogCaldroidFragment.show(getSupportFragmentManager(), "TAG");
 
     }
+
 private  void messagesView_set(){
     ///ЗАполнение списка товаров
     messagesView = (ListView) findViewById(R.id.listView_products);
     if (app.getmDatabase().child("shops").child(shopname_load).child("products") != null) {
-        mAdapter = new FirebaseListAdapter<Product>(this, Product.class, android.R.layout.simple_list_item_2, app.getmDatabase().child("shops").child(shopname_load).child("products")) {
-            @Override
-            protected void populateView(View view, Product chatMessage, int position) {
-                if (chatMessage != null) {
-                    ((TextView) view.findViewById(android.R.id.text1)).setText(chatMessage.getname());
-                    ((TextView) view.findViewById(android.R.id.text2)).setText(chatMessage.getprice());
-                }
-            }
-        };
-
-        messagesView.setOnItemClickListener(
-                mylistner =  new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View itemClicked, int position,
-                                    long id) {
-
-                TextView textVie1 = (TextView) itemClicked.findViewById(android.R.id.text1);
-                showSnackbar("Нажал на товар = " + textVie1.getText().toString());
-                myposition = mAdapter.getRef(position).getKey().toString();
-//массив с забитыми днями
-/*                app.getmDatabase().child("shops").child(shopname_load).child("products").child(myposition).child("workdays").addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                MyStringdisableDateList.clear();
-                                if (dataSnapshot != null) {
-
-                                    for (DataSnapshot RestNames : dataSnapshot.getChildren()) {
-
-                                        //   MyStringdisableDateList.add(dataSnapshot.getValue().toString());
-                                        Log.w("В СПИСОК ЗАнятых дел", dataSnapshot.getValue().toString());
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.w("В заказах пусто", "getUser:onCancelled", databaseError.toException());
-                            }
-                        });*/
 
 
-
-                calendar_creator();
-
-            }
-        });
+        //адаптер ,  как заполнять список товаров в зависимости от типа магазина зависит от shopname_load
+        mAdapter=Helper_shop.chtoto(tipe_shop,app.getmDatabase(),shopname_load,this);
+        // создаем  листнер на позиции в списке товаров
+        mylistner=helper_Db_listenr.Listner_lista_caledaria(mAdapter);
+        messagesView.setOnItemClickListener(mylistner);
 
 
         messagesView.setAdapter(mAdapter);
@@ -312,6 +259,7 @@ private  void messagesView_set(){
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(mAdapter!=null)
         mAdapter.cleanup();
     }
 
@@ -321,18 +269,24 @@ private  void messagesView_set(){
         Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_LONG).show();
     }
 
-    @Override
-    public void callBackReturn() {
-        Show_modifibutton=true;
+    //Если с магазионм всё внорме начинается загрузка магазина, и установка переменных
+       @Override
+    public void callBackReturn_populateprofile(Shops shop,Boolean admin) {
+        Show_modifibutton=admin;
+        tipe_shop=shop.gettipe_of_shop();
+
+        //заполняет шапку магазина
+        Helper_shop.populateProfile(shop,this,mShopPicPicture,mShop_text,mShop_tipe);
+
+
+
+        //Заполняет список товаров
+          messagesView_set();
     }
-
+// Нажатие на товар
     @Override
-    public void callBackReturn_populateprofile(Shops shop) {
-        helper.populateProfile(shop,this,mShopPicPicture,mShop_text,mShop_tipe);
-    }
+    public void callBack_producttouch_open(String position) {
 
-    @Override
-    public void callBackReturnofff() {
-
+        calendar_creator(position,tipe_shop);
     }
 }
