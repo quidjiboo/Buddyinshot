@@ -55,9 +55,7 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
     private  String tipe_shop = "noname_default";
     private Boolean Show_modifibutton=false;
 
-//временные
-    private ArrayList<Date> MydisableDateList;
-    private ArrayList<String> MyStringdisableDateList;
+
 
     @BindView(R.id.ShopPicPicture)
     ImageView mShopPicPicture;
@@ -77,8 +75,7 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
         helper_Db_listenr.registerCallBack(this);
 
 
-        MyStringdisableDateList = new ArrayList<>();
-        MydisableDateList = new ArrayList<>();
+
         //если активити открыть без передачи в неё данных - пропускается пункт передачи названия шопа
         if(getIntent().getStringExtra("shopname")!=null){
         shopname_load = getIntent().getStringExtra("shopname");}
@@ -170,73 +167,7 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
     }
 
 
-    private  void calendar_creator(final String myposition, String tipe_shop){
 
-        final CaldroidFragment dialogCaldroidFragment = CaldroidFragment.newInstance("Select a date", 3, 2013);
-        dialogCaldroidFragment.setCancelable(true);
-
-        Bundle args = new Bundle();
-        Calendar cal = Calendar.getInstance();
-        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
-        if (!MydisableDateList.isEmpty()) {
-            Log.w("MydisableDateList!!!!!", MydisableDateList.get(0).toString());
-            //  dialogCaldroidFragment.setDisableDates(MydisableDateList);
-            dialogCaldroidFragment.setDisableDatesFromString(MyStringdisableDateList);
-        }
-        dialogCaldroidFragment.setArguments(args);
-
-        final CaldroidListener listener = new CaldroidListener() {
-
-            @Override
-            public void onSelectDate(Date date1, View view) {
-                if(auth.getCurrentUser()!=null){
-                    if (date1.before(Calendar.getInstance().getTime())){
-                        showSnackbar("Выбеи другую дату");
-                    }
-
-                    else {
-                        showSnackbar("Выбрал дату" + date1.toString());
-                        MydisableDateList.add(date1);
-                        String month = (String) android.text.format.DateFormat.format("MM", date1); //06
-                        String year = (String) android.text.format.DateFormat.format("yyyy", date1); //2013
-                        String day = (String) android.text.format.DateFormat.format("dd", date1);
-                        String zapis = year + month + day;
-                        MyDate_format my_date = new MyDate_format(month, year, day);
-                        dialogCaldroidFragment.getDialog().dismiss();
-                        // ЗАполеяю в базе поля _ в самом магащзине и надо добавить пользователю в личной папке !!!
-                        // app.getmDatabase().child("shops").child(shopname_load).child("products").child(myposition).child("workdays").push().setValue(my_date);}
-                        app.getmDatabase().child("shops").child(shopname_load).child("products").child(myposition).child("workdays").child(zapis).push().setValue(app.getauth().getCurrentUser().getUid());
-                    }
-                }
-                else{
-                    //showSnackbar("ЗАлогинтесь");
-                    Snackbar.make(view, "ЧТО БЫ ВЫБРАТЬ ДАТУ ЗАЛОГИНТЕСЬ", Snackbar.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onChangeMonth(int month, int year) {
-
-            }
-
-            @Override
-            public void onLongClickDate(Date date, View view) {
-
-            }
-
-            @Override
-            public void onCaldroidViewCreated() {
-
-
-            }
-
-        };
-
-        dialogCaldroidFragment.setCaldroidListener(listener);
-        dialogCaldroidFragment.show(getSupportFragmentManager(), "TAG");
-
-    }
 
 private  void messagesView_set(){
     ///ЗАполнение списка товаров
@@ -264,10 +195,6 @@ private  void messagesView_set(){
     }
 
 
-    @MainThread
-    private void showSnackbar(String errorMessage) {
-        Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_LONG).show();
-    }
 
     //Если с магазионм всё внорме начинается загрузка магазина, и установка переменных
        @Override
@@ -283,10 +210,12 @@ private  void messagesView_set(){
         //Заполняет список товаров
           messagesView_set();
     }
+
 // Нажатие на товар
     @Override
     public void callBack_producttouch_open(String position) {
 
-        calendar_creator(position,tipe_shop);
+Helper_product.populate_barbershop_product(app.getmDatabase(),app.getauth().getCurrentUser(),position,shopname_load,getSupportFragmentManager());
+   //     calendar_creator(position,tipe_shop);
     }
 }

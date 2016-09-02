@@ -48,7 +48,7 @@ public class Helper_shop extends AppCompatActivity {
         mShop_tipe.setText(tipeofshop);
     }
 
-
+/// заполнение списка продуктов в зависимости от типа магазина
     static public FirebaseListAdapter chtoto(String t, DatabaseReference mDatabase,String shopname_load,Activity activiti){
         String tipeshop;
     FirebaseListAdapter Xdd;
@@ -77,6 +77,13 @@ else { Xdd = new FirebaseListAdapter<Product>(activiti, Product.class, android.R
         return Xdd;
     }
 
+    static void touch_the_product(final String myposition, String tipe_shop) {
 
+        String tipe=tipe_shop;
+        switch (tipe){
+        case "barbershop":  ;
+        break;}
+
+    }
 
 }
