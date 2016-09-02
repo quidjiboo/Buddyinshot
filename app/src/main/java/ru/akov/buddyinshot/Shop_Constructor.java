@@ -24,6 +24,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.akov.buddyinshot.Tipes_of_DATA.Product;
+import ru.akov.buddyinshot.Tipes_of_DATA.Product_varibles_default;
+import ru.akov.buddyinshot.Tipes_of_DATA.Shops;
 
 
 public class Shop_Constructor extends AppCompatActivity   {
@@ -38,16 +41,18 @@ public class Shop_Constructor extends AppCompatActivity   {
     TextView mShop_text;
     @BindView(R.id.Shop_tipe)
     TextView mShop_tipe;
-    private  String shopname_load = "noname_default";
-
+    private  String tipe_of_shop = "noname_default";
+    private  String shopname_load = "default";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
         if(getIntent().getStringExtra("shopname")!=null){
-            shopname_load = getIntent().getStringExtra("shopname");}
-        else{ shopname_load = "noname_default";}
+            shopname_load = getIntent().getStringExtra("shopname");
+            tipe_of_shop = getIntent().getStringExtra("shoptipe");}
+        else{ shopname_load = "noname_default";
+            shopname_load = "default";}
 
         app = ((My_app) getApplicationContext());
         this.auth=app.getauth();
@@ -97,9 +102,19 @@ public class Shop_Constructor extends AppCompatActivity   {
     }
 
     public void add_product(View view) {
-Product product = new Product("default","0.0","https://firebasestorage.googleapis.com/v0/b/test-base-soc-net.appspot.com/o/shopping-paper-bag-outline_318-39786.png?alt=media&token=93a2373e-1336-4fbe-9268-924db09e4fb9");
+
+
         String key = app.getmDatabase().child("shops").child(shopname_load).child("products").push().getKey();
-        app.getmDatabase().child("shops").child(shopname_load).child("products").child(key).setValue(product);
+        app.getmDatabase().child("shops").child(shopname_load).child("products").child(key).setValue(Add_product_Helper.getDefaultProduct(tipe_of_shop));
+
+        Product_varibles_default variebl = new Product_varibles_default("default");
+        app.getmDatabase().child("shops").child(shopname_load).child("products").child(key).child("variebles").setValue(Add_product_Helper.getDefaultProduct_varibles_default(tipe_of_shop));
+
+
+
+        /*String key = app.getmDatabase().child("shops").child(shopname_load).child("products").push().getKey();
+        Product product = new Product("default","0.0","https://firebasestorage.googleapis.com/v0/b/test-base-soc-net.appspot.com/o/shopping-paper-bag-outline_318-39786.png?alt=media&token=93a2373e-1336-4fbe-9268-924db09e4fb9");
+        app.getmDatabase().child("shops").child(shopname_load).child("products").child(key).setValue(product);*/
     }
 
     @Override

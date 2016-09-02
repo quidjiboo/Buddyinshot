@@ -1,4 +1,4 @@
-package ru.akov.buddyinshot;
+package ru.akov.buddyinshot.TRASH;
 
 /**
  * Created by Alexandr on 13.03.2016.

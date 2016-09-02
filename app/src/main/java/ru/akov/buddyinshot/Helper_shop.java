@@ -1,31 +1,19 @@
 package ru.akov.buddyinshot;
 
 import android.app.Activity;
-import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.roomorama.caldroid.CaldroidFragment;
-import com.roomorama.caldroid.CaldroidListener;
 
-import java.util.Calendar;
-import java.util.Date;
+import ru.akov.buddyinshot.Tipes_of_DATA.Product;
+import ru.akov.buddyinshot.Tipes_of_DATA.Shops;
 
 /**
  * Created by User on 01.09.2016.
@@ -77,13 +65,6 @@ else { Xdd = new FirebaseListAdapter<Product>(activiti, Product.class, android.R
         return Xdd;
     }
 
-    static void touch_the_product(final String myposition, String tipe_shop) {
 
-        String tipe=tipe_shop;
-        switch (tipe){
-        case "barbershop":  ;
-        break;}
-
-    }
 
 }

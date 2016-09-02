@@ -1,4 +1,4 @@
-package ru.akov.buddyinshot;
+package ru.akov.buddyinshot.Tipes_of_DATA;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 

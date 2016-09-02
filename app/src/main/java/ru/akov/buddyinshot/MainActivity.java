@@ -16,7 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.database.ValueEventListener;
+
+import ru.akov.buddyinshot.Tipes_of_DATA.Shops;
 
 public class MainActivity extends AppCompatActivity implements  MyCallbackOLD {
 

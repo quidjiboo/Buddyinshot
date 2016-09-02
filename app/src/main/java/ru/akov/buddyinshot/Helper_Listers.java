@@ -1,24 +1,17 @@
 package ru.akov.buddyinshot;
 
-import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
+import ru.akov.buddyinshot.Tipes_of_DATA.Shops;
 
 /**
  * Created by User on 01.09.2016.
@@ -39,10 +32,12 @@ public class Helper_Listers {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Shops shop = dataSnapshot.getValue(Shops.class);
+               // Log.w("TIP_OFSHOP", "сенился тип магазин");
                 if (shop != null) {
                     Boolean admin = false;
                     if (shop != null && user1 != null && shop.getadmin().toString().equals(user1.getUid()))
                         admin = true;
+
                     myCallback.callBackReturn_populateprofile(shop, admin);
                 }
             }

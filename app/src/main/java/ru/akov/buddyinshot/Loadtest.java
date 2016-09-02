@@ -2,12 +2,10 @@ package ru.akov.buddyinshot;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,22 +15,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.roomorama.caldroid.CaldroidFragment;
-import com.roomorama.caldroid.CaldroidListener;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.akov.buddyinshot.Tipes_of_DATA.Shops;
+import ru.akov.buddyinshot.Tipes_of_DATA.User;
 
 
 public class Loadtest extends AppCompatActivity  implements MyCallback  {
@@ -52,7 +46,7 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
 
     //переменные от которых зависит загрузка
     private  String shopname_load = "noname_default";
-    private  String tipe_shop = "noname_default";
+    private  String tipe_shop = "default";
     private Boolean Show_modifibutton=false;
 
 
@@ -115,7 +109,8 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
 
         //создаём листнера по товарам в магазине... смотри callBackReturn_populateprofile
         shop_listner=helper_Db_listenr.chek_shop(auth.getCurrentUser(),shopname_load);
-        app.getmDatabase().child("shops").child(shopname_load).addListenerForSingleValueEvent(shop_listner);
+        app.getmDatabase().child("shops").child(shopname_load).addValueEventListener(shop_listner);
+
     }
 
 
@@ -144,8 +139,9 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
         if (id == R.id.action_modify_shop) {
             Intent intent = new Intent(Loadtest.this, Shop_Constructor.class);
             intent.putExtra("shopname",shopname_load);
+            intent.putExtra("shoptipe",tipe_shop);
             startActivity(intent);
-            finish();
+                    finish();
 
             return true;
         }
@@ -160,8 +156,10 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
     }
 
     public void next_scr(View view) {
+
         Intent intent = new Intent(Loadtest.this, Buddylist.class);
         startActivity(intent);
+
         this.finish();
 
     }
@@ -190,15 +188,20 @@ private  void messagesView_set(){
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // УДАЛЯТЬ ЛИСТНЕР ПРИ ПЕРЕХОДЕ НА СЛЕДУЮЩИЕ ЭКРАНЫ ЧТО БЫ НЕ ВЫПОЛНЯЛИСЬ ДЕЙСТВИЯ С ЗАКРЫТОЙ АКТИВИТИ
+        app.getmDatabase().child("shops").child(shopname_load).removeEventListener(shop_listner);
+        Log.w("shop_listner ВУДУЕ!", "Удалил листнер");
+
         if(mAdapter!=null)
         mAdapter.cleanup();
+
     }
 
 
 
     //Если с магазионм всё внорме начинается загрузка магазина, и установка переменных
        @Override
-    public void callBackReturn_populateprofile(Shops shop,Boolean admin) {
+    public void callBackReturn_populateprofile(Shops shop, Boolean admin) {
         Show_modifibutton=admin;
         tipe_shop=shop.gettipe_of_shop();
 
@@ -213,9 +216,15 @@ private  void messagesView_set(){
 
 // Нажатие на товар
     @Override
-    public void callBack_producttouch_open(String position) {
+    public void callBack_producttouch_open(final String position) {
 
-Helper_product.populate_barbershop_product(app.getmDatabase(),app.getauth().getCurrentUser(),position,shopname_load,getSupportFragmentManager());
-   //     calendar_creator(position,tipe_shop);
+
+
+
+
+
+
+       Helper_product.touch_the_product(app.getmDatabase(),app.getauth().getCurrentUser(),position,shopname_load,getSupportFragmentManager(),tipe_shop);
+
     }
 }
