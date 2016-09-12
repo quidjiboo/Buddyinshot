@@ -1,8 +1,12 @@
 package ru.akov.buddyinshot;
 
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
@@ -14,18 +18,21 @@ import com.google.firebase.database.ValueEventListener;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import ru.akov.buddyinshot.TRASH.Gradient_Color;
+import ru.akov.buddyinshot.Tipes_of_DATA.Buzy_day;
 import ru.akov.buddyinshot.Tipes_of_DATA.MyDate_format;
 
 /**
  * Created by User on 12.09.2016.
  */
-public class Calendarik_creator {
+public class Calendarik_creator extends AppCompatActivity {
 
-    static CaldroidFragment create(final DatabaseReference mDatabase, final FirebaseUser user, final String myposition, final String shopname_load){
+    static CaldroidFragment create(final DatabaseReference mDatabase, final FirebaseUser user, final String myposition, final String shopname_load, ArrayList<Buzy_day> buzy_days,float max_client ){
         final CaldroidFragment dialogCaldroidFragment = CaldroidFragment.newInstance("Select a date", 3, 2013);
         dialogCaldroidFragment.setCancelable(true);
 
@@ -35,9 +42,25 @@ public class Calendarik_creator {
         args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
 
         dialogCaldroidFragment.setArguments(args);
-        GregorianCalendar calendar = new GregorianCalendar(2016, 8, 17);
-        Date hireDay = calendar.getTime();
-        dialogCaldroidFragment.setTextColorForDate(R.color.caldroid_light_red,hireDay);
+      //  GregorianCalendar calendar = new GregorianCalendar(2016, 8, 17);
+     //   Date hireDay = calendar.getTime();
+        for (int i = 0; i < buzy_days.size(); i++) {
+            float stepen_zagruza = 0;
+            //степень загруженности дня
+            System.out.println(buzy_days.get(i).getBuzy_number());
+            System.out.println(max_client);
+             stepen_zagruza = buzy_days.get(i).getBuzy_number()/max_client;
+            System.out.println(stepen_zagruza);
+
+            ColorDrawable   new_col = new ColorDrawable(0xFF00FF00);
+
+
+      //      dialogCaldroidFragment.setBackgroundDrawableForDate(new_col,buzy_days.get(i).getData());
+
+            dialogCaldroidFragment.setTextColorForDate(Gradient_Color.get_my_colo(stepen_zagruza),buzy_days.get(i).getData());
+
+        }
+
         final CaldroidListener listener = new CaldroidListener() {
 
             @Override
@@ -135,4 +158,6 @@ public class Calendarik_creator {
 
         return dialogCaldroidFragment;
     }
+
+
 }

@@ -11,6 +11,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import ru.akov.buddyinshot.Tipes_of_DATA.Product_varibles_barbershop;
 import ru.akov.buddyinshot.Tipes_of_DATA.Shops;
 
 /**
@@ -31,6 +32,7 @@ public class Helper_Listers {
         Xdd = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 Shops shop = dataSnapshot.getValue(Shops.class);
                // Log.w("TIP_OFSHOP", "сенился тип магазин");
                 if (shop != null) {

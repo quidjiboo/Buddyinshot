@@ -15,25 +15,33 @@ import com.google.firebase.database.ValueEventListener;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
+import ru.akov.buddyinshot.Tipes_of_DATA.Buzy_day;
 import ru.akov.buddyinshot.Tipes_of_DATA.MyDate_format;
+import ru.akov.buddyinshot.Tipes_of_DATA.Product_varibles_barbershop;
 
 /**
  * Created by User on 01.09.2016.
  */
 public class Helper_product extends AppCompatActivity {
 
-    static void choosing_barbershop_product(final DatabaseReference mDatabase, final FirebaseUser user, final String myposition, final String shopname_load,FragmentManager manager) {
+    static void choosing_barbershop_product(final DatabaseReference mDatabase, final FirebaseUser user, final String myposition, final String shopname_load, final FragmentManager manager) {
 
-        mDatabase.child("shops").child(shopname_load).child("products").child(myposition).child("workdays").addListenerForSingleValueEvent(
+
+        mDatabase.child("shops").child(shopname_load).child("products").child(myposition).child("variebles").addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-
-                        /// TODO ДОБАВИТЬ СПИСОК ЗАНЯТЫХ ДНЕЙ , И ТОЛЬКО ПОСЛЕ ЭТОГО ЗАПОЛНЯТЬ КАЛЕНДАРИК! может и в реальном времени потому что при нажатии стоит одиночный листнер
+                        Product_varibles_barbershop newComment = dataSnapshot.getValue(Product_varibles_barbershop.class);
+                        System.out.println("ВАРИЕБЛЕСЫЫ!!" + newComment.getclients());
+                        choosing_barbershop_product_state_two(mDatabase,user,myposition,shopname_load,manager,newComment.getclients());
                     }
 
                     @Override
@@ -43,8 +51,53 @@ public class Helper_product extends AppCompatActivity {
                 });
 
 
-       /// сохдёте окно календарика!
-        Calendarik_creator.create(mDatabase,user,myposition,shopname_load).show(manager, "TAG");
+    }
+    static void choosing_barbershop_product_state_two(final DatabaseReference mDatabase, final FirebaseUser user, final String myposition, final String shopname_load, final FragmentManager manager, final float max_client) {
+        mDatabase.child("shops").child(shopname_load).child("products").child(myposition).child("workdays").addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                        ArrayList buzy_dayz = new ArrayList();
+
+                        for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+
+
+                            Date date =null;
+                            System.out.println( postSnapshot.getKey().toString());
+                            String stringDateFormat = "yyyyMMdd";
+                            SimpleDateFormat format = new SimpleDateFormat(stringDateFormat, Locale.US);
+
+                            try {
+                                date = format.parse( postSnapshot.getKey().toString());
+
+                                System.out.println(date.toString());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            Buzy_day X_day = new  Buzy_day(date, (int) postSnapshot.getChildrenCount());
+                            buzy_dayz.add(X_day);
+                            // TODO: handle the post
+
+
+
+                        }
+
+                        /// TODO ДОБАВИТЬ СПИСОК ЗАНЯТЫХ ДНЕЙ , И ТОЛЬКО ПОСЛЕ ЭТОГО ЗАПОЛНЯТЬ КАЛЕНДАРИК! может и в реальном времени потому что при нажатии стоит одиночный листнер
+
+                        /// сохдёте окно календарика!
+                        Calendarik_creator.create(mDatabase,user,myposition,shopname_load,buzy_dayz,max_client).show(manager, "TAG");
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("уккщк", "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+
+
+
 
 
 
