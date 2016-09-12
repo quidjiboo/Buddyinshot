@@ -105,7 +105,7 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
 
         app = ((My_app) getApplicationContext());
         this.auth=app.getauth();
-        this. mAuthListener=app.getmAuthListener();
+        this.mAuthListener=app.getmAuthListener();
 
         //создаём листнера по товарам в магазине... смотри callBackReturn_populateprofile
         shop_listner=helper_Db_listenr.chek_shop(auth.getCurrentUser(),shopname_load);
