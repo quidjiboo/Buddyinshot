@@ -1,7 +1,9 @@
 package ru.akov.buddyinshot;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,7 +16,8 @@ import com.google.firebase.database.FirebaseDatabase;
  * Created by User on 21.03.2016.
  */
 public class My_app extends Application {
-
+    private static Context mContext;
+    private static ContextCompat mCompatContext;
     private boolean flag = true;
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
@@ -30,6 +33,7 @@ public class My_app extends Application {
     @Override
     public void onCreate() {
        super.onCreate();
+        mContext = this;
 
         auth   = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -82,5 +86,7 @@ public void createmAuthListener () {
 
 
 }
-
+    public static Context getContext(){
+        return mContext;
+    }
 }

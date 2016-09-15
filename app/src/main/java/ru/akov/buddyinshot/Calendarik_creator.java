@@ -1,8 +1,14 @@
 package ru.akov.buddyinshot;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,14 +57,12 @@ public class Calendarik_creator extends AppCompatActivity {
             System.out.println(buzy_days.get(i).getBuzy_number());
             System.out.println(max_client);
              stepen_zagruza = buzy_days.get(i).getBuzy_number()/max_client;
-            System.out.println(stepen_zagruza);
-
-            ColorDrawable   new_col = new ColorDrawable(0xFF00FF00);
 
 
-      //      dialogCaldroidFragment.setBackgroundDrawableForDate(new_col,buzy_days.get(i).getData());
 
-            dialogCaldroidFragment.setTextColorForDate(Gradient_Color.get_my_colo(stepen_zagruza),buzy_days.get(i).getData());
+                     dialogCaldroidFragment.setBackgroundDrawableForDate(Gradient_Color.getInstance().get_my_colo(stepen_zagruza),buzy_days.get(i).getData());
+
+         //   dialogCaldroidFragment.setTextColorForDate(Gradient_Color.get_my_colo(stepen_zagruza),buzy_days.get(i).getData());
 
         }
 
