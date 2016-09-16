@@ -28,9 +28,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.roomorama.caldroid.CaldroidFragment;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import ru.akov.buddyinshot.On_product_of_barbershop_click.Calendarik_creator;
+import ru.akov.buddyinshot.On_product_of_barbershop_click.Touch_product;
 import ru.akov.buddyinshot.Tipes_of_DATA.Shops;
 import ru.akov.buddyinshot.Tipes_of_DATA.User;
 
@@ -39,7 +45,9 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
 
     private AdapterView.OnItemClickListener mylistner;
 
+    CaldroidFragment calendar;
 
+    private Touch_product product_touch_listenr;
     private Helper_Listers helper_Db_listenr;
     private ValueEventListener shop_listner;
 
@@ -74,7 +82,8 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
         helper_Db_listenr = new Helper_Listers();
         helper_Db_listenr.registerCallBack(this);
 
-
+        product_touch_listenr = new Touch_product();
+        product_touch_listenr.registerCallBack(this);
 
         //если активити открыть без передачи в неё данных - пропускается пункт передачи названия шопа
         if(getIntent().getStringExtra("shopname")!=null){
@@ -224,13 +233,21 @@ private  void messagesView_set(){
     @Override
     public void callBack_producttouch_open(final String position) {
 
-
-
-
-
-
-
-       Helper_product.touch_the_product(app.getmDatabase(),app.getauth().getCurrentUser(),position,shopname_load,getSupportFragmentManager(),tipe_shop);
+      Helper_product.touch_the_product(app.getmDatabase(),app.getauth().getCurrentUser(),position,shopname_load,getSupportFragmentManager(),tipe_shop,product_touch_listenr);
 
     }
+
+
+    // ЗАрефакторить обощить календарик для разных магазинов и не создавать заново
+    @Override
+    public void callBack_touchproduct_creat_calendarik(ArrayList buzy_dayz, float max_client,String position) {
+        if(calendar!=null)
+        calendar.dismiss();
+        calendar = Calendarik_creator.create(buzy_dayz,max_client);
+
+        calendar.setCaldroidListener(Calendarik_creator.createlistner(app.getmDatabase(),app.getauth().getCurrentUser(),position,shopname_load));
+        calendar.show(getSupportFragmentManager(), "TAG");
+    }
+
+
 }

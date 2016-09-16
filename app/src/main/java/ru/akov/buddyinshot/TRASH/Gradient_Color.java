@@ -27,7 +27,7 @@ public class Gradient_Color{
     private Drawable drawable4;
     private Drawable drawable5;
     private Drawable drawablegold;
-    private Bitmap bitmap;
+
     public static synchronized Gradient_Color getInstance() {
         if(instance==null){
             instance = new Gradient_Color();   /// спорное решение !!!
@@ -40,29 +40,31 @@ public class Gradient_Color{
                 Bitmap.Config.ARGB_8888);
         bitmap.eraseColor(Color.BLUE);
         Drawable drawable2 = new BitmapDrawable(My_app.getContext().getResources(),bitmap );*/
-        bitmap = Bitmap.createBitmap(100, 100,
+        Bitmap bitmap = Bitmap.createBitmap(1, 1,
                 Bitmap.Config.ARGB_8888);
 
         bitmap.eraseColor( ContextCompat.getColor(My_app.getContext(), R.color.MY_RED_2));
         drawable2 = new BitmapDrawable(My_app.getContext().getResources(),bitmap );
 
-        bitmap = Bitmap.createBitmap(100, 100,
+        bitmap = Bitmap.createBitmap(1, 1,
                 Bitmap.Config.ARGB_8888);
         bitmap.eraseColor( ContextCompat.getColor(My_app.getContext(), R.color.MY_RED_3));
         drawable3 = new BitmapDrawable(My_app.getContext().getResources(),bitmap );
-        bitmap = Bitmap.createBitmap(100, 100,
+        bitmap = Bitmap.createBitmap(1, 1,
                 Bitmap.Config.ARGB_8888);
         bitmap.eraseColor( ContextCompat.getColor(My_app.getContext(), R.color.MY_RED_4));
         drawable4 = new BitmapDrawable(My_app.getContext().getResources(),bitmap );
-        bitmap = Bitmap.createBitmap(100, 100,
+        bitmap = Bitmap.createBitmap(1, 1,
                 Bitmap.Config.ARGB_8888);
         bitmap.eraseColor( ContextCompat.getColor(My_app.getContext(), R.color.MY_RED_5));
         drawable5 = new BitmapDrawable(My_app.getContext().getResources(),bitmap );
-        bitmap = Bitmap.createBitmap(100, 100,
+        bitmap = Bitmap.createBitmap(1, 1,
                 Bitmap.Config.ARGB_8888);
         bitmap.eraseColor( ContextCompat.getColor(My_app.getContext(), R.color.MY_GOLD));
         drawablegold = new BitmapDrawable(My_app.getContext().getResources(),bitmap );
-        bitmap.recycle();
+
+
+
     }
     public Drawable get_my_colo(float x){
         //TO DO ну както надо что то делать
@@ -75,7 +77,8 @@ public class Gradient_Color{
         if (x>0.5&&x<=0.75){new_col =  drawable4;}
         else
         if (x>0.75&&x<=1){new_col = drawable5;}
-//else{new_col = drawablegold;}
+else
+        if (x>1){new_col = drawablegold;}
 
         return new_col;
 

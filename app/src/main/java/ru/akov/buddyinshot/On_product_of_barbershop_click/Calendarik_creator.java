@@ -1,4 +1,4 @@
-package ru.akov.buddyinshot;
+package ru.akov.buddyinshot.On_product_of_barbershop_click;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -39,8 +39,8 @@ import ru.akov.buddyinshot.Tipes_of_DATA.MyDate_format;
  */
 public class Calendarik_creator extends AppCompatActivity {
 
-    static CaldroidFragment create(final DatabaseReference mDatabase, final FirebaseUser user, final String myposition, final String shopname_load, ArrayList<Buzy_day> buzy_days,float max_client ){
-        final CaldroidFragment dialogCaldroidFragment = CaldroidFragment.newInstance("Select a date", 3, 2013);
+    public  static CaldroidFragment create( ArrayList<Buzy_day> buzy_days,float max_client ){
+        CaldroidFragment dialogCaldroidFragment = CaldroidFragment.newInstance("Select a date", 3, 2013);
         dialogCaldroidFragment.setCancelable(true);
 
         Bundle args = new Bundle();
@@ -60,13 +60,14 @@ public class Calendarik_creator extends AppCompatActivity {
 
 
 
-                     dialogCaldroidFragment.setBackgroundDrawableForDate(Gradient_Color.getInstance().get_my_colo(stepen_zagruza),buzy_days.get(i).getData());
+                       dialogCaldroidFragment.setBackgroundDrawableForDate(Gradient_Color.getInstance().get_my_colo(stepen_zagruza),buzy_days.get(i).getData());
+                }
 
-         //   dialogCaldroidFragment.setTextColorForDate(Gradient_Color.get_my_colo(stepen_zagruza),buzy_days.get(i).getData());
+        return dialogCaldroidFragment;
+    }
 
-        }
-
-        final CaldroidListener listener = new CaldroidListener() {
+    public  static CaldroidListener createlistner(final DatabaseReference mDatabase, final FirebaseUser user, final String myposition, final String shopname_load){
+         CaldroidListener listener = new CaldroidListener() {
 
             @Override
             public void onSelectDate(final Date date1, final View view) {
@@ -86,8 +87,12 @@ public class Calendarik_creator extends AppCompatActivity {
                         final   String day = (String) android.text.format.DateFormat.format("dd", date1);
                         final String zapis = year + month + day;
 
+                        Snackbar.make(view,"Выбрал дату" + date1.toString(), Snackbar.LENGTH_LONG).show();
+                        //      MydisableDateList.add(date1);
+                        MyDate_format my_date = new MyDate_format(month, year, day);
+                        mDatabase.child("shops").child(shopname_load).child("products").child(myposition).child("workdays").child(zapis).push().setValue(user.getUid());
 
-                        mDatabase.child("shops").child(shopname_load).child("products").child(myposition).addListenerForSingleValueEvent(
+                        /*mDatabase.child("shops").child(shopname_load).child("products").child(myposition).addListenerForSingleValueEvent(
                                 new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -108,7 +113,7 @@ public class Calendarik_creator extends AppCompatActivity {
                                                 // app.getmDatabase().child("shops").child(shopname_load).child("products").child(myposition).child("workdays").push().setValue(my_date);}
                                                 mDatabase.child("shops").child(shopname_load).child("products").child(myposition).child("workdays").child(zapis).push().setValue(user.getUid());
 
-                                                dialogCaldroidFragment.getDialog().dismiss();
+
                                             }
                                             else{Snackbar.make(view,"ОПА ОПА ОПААА ", Snackbar.LENGTH_LONG).show();}
                                         }
@@ -120,7 +125,7 @@ public class Calendarik_creator extends AppCompatActivity {
                                     public void onCancelled(DatabaseError databaseError) {
                                         Log.w("уккщк", "getUser:onCancelled", databaseError.toException());
                                     }
-                                });
+                                });*/
 
 
 
@@ -154,15 +159,6 @@ public class Calendarik_creator extends AppCompatActivity {
             }
 
         };
-
-
-
-
-        dialogCaldroidFragment.setCaldroidListener(listener);
-
-
-        return dialogCaldroidFragment;
+        return listener;
     }
-
-
 }
