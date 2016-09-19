@@ -1,35 +1,20 @@
 package ru.akov.buddyinshot.On_product_of_barbershop_click;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
+import ru.akov.buddyinshot.MyCallback;
 import ru.akov.buddyinshot.TRASH.Gradient_Color;
 import ru.akov.buddyinshot.Tipes_of_DATA.Buzy_day;
 import ru.akov.buddyinshot.Tipes_of_DATA.MyDate_format;
@@ -38,6 +23,10 @@ import ru.akov.buddyinshot.Tipes_of_DATA.MyDate_format;
  * Created by User on 12.09.2016.
  */
 public class Calendarik_creator extends AppCompatActivity {
+    MyCallback myCallback;
+    public void registerCallBack(MyCallback callback) {
+        this.myCallback = callback;
+    }
 
     public  static CaldroidFragment create( ArrayList<Buzy_day> buzy_days,float max_client ){
         CaldroidFragment dialogCaldroidFragment = CaldroidFragment.newInstance("Select a date", 3, 2013);
@@ -66,7 +55,7 @@ public class Calendarik_creator extends AppCompatActivity {
         return dialogCaldroidFragment;
     }
 
-    public  static CaldroidListener createlistner(final DatabaseReference mDatabase, final FirebaseUser user, final String myposition, final String shopname_load){
+    public CaldroidListener createlistner(final DatabaseReference mDatabase, final FirebaseUser user, final String myposition, final String shopname_load, final CaldroidFragment cal){
          CaldroidListener listener = new CaldroidListener() {
 
             @Override
@@ -91,7 +80,9 @@ public class Calendarik_creator extends AppCompatActivity {
                         //      MydisableDateList.add(date1);
                         MyDate_format my_date = new MyDate_format(month, year, day);
                         mDatabase.child("shops").child(shopname_load).child("products").child(myposition).child("workdays").child(zapis).push().setValue(user.getUid());
+                        myCallback.callBack_touchproduct_creat_add_zapros();
 
+                        cal.dismiss();
                         /*mDatabase.child("shops").child(shopname_load).child("products").child(myposition).addListenerForSingleValueEvent(
                                 new ValueEventListener() {
                                     @Override

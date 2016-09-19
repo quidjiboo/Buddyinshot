@@ -13,4 +13,5 @@ public interface MyCallback {
     void callBack_producttouch_open(String myposition);
     void callBack_touchproduct_creat_calendarik(ArrayList buzy_dayz, float max_client,String position);
 
+    void callBack_touchproduct_creat_add_zapros();
 }

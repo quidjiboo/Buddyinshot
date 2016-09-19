@@ -1,8 +1,8 @@
 package ru.akov.buddyinshot;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +17,7 @@ import android.view.ViewGroup;
  * Use the {@link Zakaz_product#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Zakaz_product extends Fragment {
+public class Zakaz_product extends DialogFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -75,7 +75,7 @@ public class Zakaz_product extends Fragment {
         }
     }
 
-    @Override
+/*    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -84,7 +84,7 @@ public class Zakaz_product extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
+    }*/
 
     @Override
     public void onDetach() {

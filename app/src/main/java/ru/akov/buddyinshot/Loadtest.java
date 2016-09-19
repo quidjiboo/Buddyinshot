@@ -1,12 +1,6 @@
 package ru.akov.buddyinshot;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,30 +17,26 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import ru.akov.buddyinshot.On_product_of_barbershop_click.Calendarik_creator;
 import ru.akov.buddyinshot.On_product_of_barbershop_click.Touch_product;
 import ru.akov.buddyinshot.Tipes_of_DATA.Shops;
-import ru.akov.buddyinshot.Tipes_of_DATA.User;
 
 
 public class Loadtest extends AppCompatActivity  implements MyCallback  {
 
     private AdapterView.OnItemClickListener mylistner;
 
-    CaldroidFragment calendar;
-
+    private CaldroidFragment calendar;
+    private CaldroidListener listner_calendar;
+    private Calendarik_creator calendarik_creator_listenr;
     private Touch_product product_touch_listenr;
     private Helper_Listers helper_Db_listenr;
     private ValueEventListener shop_listner;
@@ -85,6 +75,8 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
         product_touch_listenr = new Touch_product();
         product_touch_listenr.registerCallBack(this);
 
+        calendarik_creator_listenr = new Calendarik_creator();
+        calendarik_creator_listenr.registerCallBack(this);
         //если активити открыть без передачи в неё данных - пропускается пункт передачи названия шопа
         if(getIntent().getStringExtra("shopname")!=null){
         shopname_load = getIntent().getStringExtra("shopname");}
@@ -237,16 +229,31 @@ private  void messagesView_set(){
 
     }
 
-
+//TODO
     // ЗАрефакторить обощить календарик для разных магазинов и не создавать заново
     @Override
     public void callBack_touchproduct_creat_calendarik(ArrayList buzy_dayz, float max_client,String position) {
         if(calendar!=null)
         calendar.dismiss();
+
+
+
         calendar = Calendarik_creator.create(buzy_dayz,max_client);
 
-        calendar.setCaldroidListener(Calendarik_creator.createlistner(app.getmDatabase(),app.getauth().getCurrentUser(),position,shopname_load));
+        listner_calendar = calendarik_creator_listenr.createlistner(app.getmDatabase(),app.getauth().getCurrentUser(),position,shopname_load,calendar);
+        calendar.setCaldroidListener(listner_calendar);
+
         calendar.show(getSupportFragmentManager(), "TAG");
+    }
+
+    @Override
+    public void callBack_touchproduct_creat_add_zapros() {
+
+      /*  Zakaz_product myDialogFragment = new Zakaz_product();
+        myDialogFragment.show(getSupportFragmentManager(), "zakaz_product");*/
+
+        CustomDialogFragment myDialogFragment = new CustomDialogFragment();
+        myDialogFragment.show(getSupportFragmentManager(), "zakaz_product");
     }
 
 
