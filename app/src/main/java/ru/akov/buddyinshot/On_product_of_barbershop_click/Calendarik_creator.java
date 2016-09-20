@@ -18,6 +18,7 @@ import ru.akov.buddyinshot.MyCallback;
 import ru.akov.buddyinshot.TRASH.Gradient_Color;
 import ru.akov.buddyinshot.Tipes_of_DATA.Buzy_day;
 import ru.akov.buddyinshot.Tipes_of_DATA.MyDate_format;
+import ru.akov.buddyinshot.Tipes_of_DATA.Zapis;
 
 /**
  * Created by User on 12.09.2016.
@@ -79,7 +80,9 @@ public class Calendarik_creator extends AppCompatActivity {
                         Snackbar.make(view,"Выбрал дату" + date1.toString(), Snackbar.LENGTH_LONG).show();
                         //      MydisableDateList.add(date1);
                         MyDate_format my_date = new MyDate_format(month, year, day);
-                        mDatabase.child("shops").child(shopname_load).child("products").child(myposition).child("workdays").child(zapis).push().setValue(user.getUid());
+                        Zapis zapis1 = new Zapis(user.getUid().toString(),true);
+                   //     mDatabase.child("shops").child(shopname_load).child("products").child(myposition).child("workdays").child(zapis).push().setValue(user.getUid());
+                        mDatabase.child("shops").child(shopname_load).child("products").child(myposition).child("workdays").child(zapis).child("-KS6zDlBBi-w47V9oBDI").setValue(zapis1);
                         myCallback.callBack_touchproduct_creat_add_zapros();
 
                         cal.dismiss();

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.akov.buddyinshot.On_product_of_barbershop_click.Calendarik_creator;
-import ru.akov.buddyinshot.On_product_of_barbershop_click.Touch_product;
+import ru.akov.buddyinshot.On_product_of_barbershop_click.Tourch_product;
 import ru.akov.buddyinshot.Tipes_of_DATA.Shops;
 
 
@@ -37,7 +37,7 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
     private CaldroidFragment calendar;
     private CaldroidListener listner_calendar;
     private Calendarik_creator calendarik_creator_listenr;
-    private Touch_product product_touch_listenr;
+    private Tourch_product product_touch_listenr;
     private Helper_Listers helper_Db_listenr;
     private ValueEventListener shop_listner;
 
@@ -72,7 +72,7 @@ public class Loadtest extends AppCompatActivity  implements MyCallback  {
         helper_Db_listenr = new Helper_Listers();
         helper_Db_listenr.registerCallBack(this);
 
-        product_touch_listenr = new Touch_product();
+        product_touch_listenr = new Tourch_product();
         product_touch_listenr.registerCallBack(this);
 
         calendarik_creator_listenr = new Calendarik_creator();

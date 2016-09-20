@@ -23,7 +23,7 @@ import ru.akov.buddyinshot.Tipes_of_DATA.Product_varibles_barbershop;
 /**
  * Created by User on 16.09.2016.
  */
-public class  Touch_product extends AppCompatActivity {
+public class Tourch_product extends AppCompatActivity {
     MyCallback myCallback;
 
     public void registerCallBack(MyCallback callback) {
