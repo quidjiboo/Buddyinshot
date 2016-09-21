@@ -63,7 +63,7 @@ public class Calendarik_creator extends AppCompatActivity {
             public void onSelectDate(final Date date1, final View view) {
 
                 Boolean add = false;
-                if(user!=null){
+              //  if(user!=null){
                     if (date1.before(Calendar.getInstance().getTime())){
 
                         Snackbar.make(view,"Выбеи другую дату", Snackbar.LENGTH_LONG).show();
@@ -80,7 +80,8 @@ public class Calendarik_creator extends AppCompatActivity {
                         Snackbar.make(view,"Выбрал дату" + date1.toString(), Snackbar.LENGTH_LONG).show();
                         //      MydisableDateList.add(date1);
                         MyDate_format my_date = new MyDate_format(month, year, day);
-                        Zapis zapis1 = new Zapis(user.getUid().toString(),true);
+                //        Zapis zapis1 = new Zapis(user.getUid().toString(),true);
+                        Zapis zapis1 = new Zapis("ntntntnt",true);
                    //     mDatabase.child("shops").child(shopname_load).child("products").child(myposition).child("workdays").child(zapis).push().setValue(user.getUid());
                         mDatabase.child("shops").child(shopname_load).child("products").child(myposition).child("workdays").child(zapis).child("-KS6zDlBBi-w47V9oBDI").setValue(zapis1);
                         myCallback.callBack_touchproduct_creat_add_zapros();
@@ -129,11 +130,12 @@ public class Calendarik_creator extends AppCompatActivity {
 
 
                     }
-                }
-                else{
+         //       }
                     //showSnackbar("ЗАлогинтесь");
-                    Snackbar.make(view, "ЧТО БЫ ВЫБРАТЬ ДАТУ ЗАЛОГИНТЕСЬ", Snackbar.LENGTH_LONG).show();
-                }
+
+         //       else{
+         //           Snackbar.make(view, "ЧТО БЫ ВЫБРАТЬ ДАТУ ЗАЛОГИНТЕСЬ", Snackbar.LENGTH_LONG).show();
+         //       }
             }
 
             @Override
