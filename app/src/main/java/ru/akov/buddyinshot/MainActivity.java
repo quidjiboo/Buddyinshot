@@ -118,17 +118,20 @@ public class MainActivity extends AppCompatActivity implements  MyCallbackOLD {
         app.createmAuthListener();
 
     //    this.auth=app.getauth(); // убрал зачемто
-
-
-
-
-
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mAdapter.cleanup();
     }
+
+
+    public void new_shop_action(View view) {
+
+
+    }
+
+
 
     public void  curent_user_action(View view) {
         if (app.getauth().getCurrentUser() != null) {

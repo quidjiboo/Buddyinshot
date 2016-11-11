@@ -253,7 +253,7 @@ private  void messagesView_set(){
         myDialogFragment.show(getSupportFragmentManager(), "zakaz_product");*/
 
         CustomDialogFragment myDialogFragment = new CustomDialogFragment();
-        myDialogFragment.show(getSupportFragmentManager(), "zakaz_product");
+        myDialogFragment.show(getSupportFragmentManager(), "2akaz_product");
     }
 
 

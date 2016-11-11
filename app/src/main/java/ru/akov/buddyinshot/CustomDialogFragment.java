@@ -19,7 +19,11 @@ public class CustomDialogFragment extends DialogFragment implements
 
         form= getActivity().getLayoutInflater()
                 .inflate(R.layout.loginform, null);
+
+
+
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+
         return(builder.setTitle("Форма авторизации").setView(form)
                 .setPositiveButton(android.R.string.ok, this)
                 .setNegativeButton(android.R.string.cancel, null).create());

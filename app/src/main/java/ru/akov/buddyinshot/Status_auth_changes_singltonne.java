@@ -54,7 +54,7 @@ import ru.akov.buddyinshot.Tipes_of_DATA.User;
                            mDatabase.child("users").child(userId).setValue(msg);
                            Log.v("AKOV", "NO USERS IN DATABASE");
 
-                           add_default_barbeshop(mDatabase,user);
+                      //     add_default_barbeshop(mDatabase,user);
 
                        }
 
