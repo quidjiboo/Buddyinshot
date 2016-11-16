@@ -128,7 +128,8 @@ public class MainActivity extends AppCompatActivity implements  MyCallbackOLD {
 
     public void new_shop_action(View view) {
 
-
+CreateBarbershop createBarbershopr = new CreateBarbershop();
+        createBarbershopr.create_shop();
     }
 
 
